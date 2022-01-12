@@ -1,3 +1,3 @@
-import { HomeNavigator, ProfileNavigator } from './Stacks'
+import HomeNavigator from './Stacks'
 
-export { HomeNavigator, ProfileNavigator }
+export default HomeNavigator

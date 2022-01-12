@@ -4,8 +4,9 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer'
+import HomeNavigator from '../Stacks'
+
 import DrawerMenu from './DrawerMenu'
-import TabNavigator from '../Tabs'
 
 const Drawer = createDrawerNavigator()
 
@@ -23,6 +24,6 @@ const DrawerMenuContainer = (props) => {
 
 export default () => (
   <Drawer.Navigator initialRouteName="Home" drawerContent={DrawerMenuContainer}>
-    <Drawer.Screen name="Home" component={TabNavigator} />
+    <Drawer.Screen name="Home" component={HomeNavigator} />
   </Drawer.Navigator>
 )

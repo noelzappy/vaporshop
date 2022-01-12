@@ -3,9 +3,9 @@ import { View } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import FontIcon from 'react-native-vector-icons/FontAwesome5'
 import { colors } from 'theme'
-
-// stack navigators
-import { HomeNavigator, ProfileNavigator } from '../Stacks'
+import SearchScreen from 'screens/Search'
+import Home from 'screens/Home'
+import CartScreen from 'screens/Cart'
 
 const Tab = createBottomTabNavigator()
 
@@ -15,20 +15,30 @@ const TabNavigator = () => (
       // eslint-disable-next-line react/prop-types
       tabBarIcon: ({ focused }) => {
         switch (route.name) {
-          case 'Home':
+          case 'HomeScreen':
             return (
               <FontIcon
                 name="home"
-                color={focused ? colors.lightPurple : colors.gray}
+                color={focused ? colors.black : colors.gray}
                 size={20}
                 solid
               />
             )
-          case 'Profile':
+          case 'SearchScreen':
             return (
               <FontIcon
-                name="user"
-                color={focused ? colors.lightPurple : colors.gray}
+                name="search"
+                color={focused ? colors.black : colors.gray}
+                size={20}
+                solid
+              />
+            )
+
+          case 'CartScreen':
+            return (
+              <FontIcon
+                name="shopping-cart"
+                color={focused ? colors.black : colors.gray}
                 size={20}
                 solid
               />
@@ -37,23 +47,39 @@ const TabNavigator = () => (
             return <View />
         }
       },
+      headerShown: false,
     })}
     tabBarOptions={{
-      activeTintColor: colors.lightPurple,
+      activeTintColor: colors.black,
       inactiveTintColor: colors.gray,
-      style: {
-        // backgroundColor: 'white',
-        // borderTopColor: 'gray',
-        // borderTopWidth: 1,
-        // paddingBottom: 5,
-        // paddingTop: 5,
+      labelStyle: {
+        display: 'none',
       },
     }}
-    initialRouteName="Home"
+    initialRouteName="HomeScreen"
     swipeEnabled={false}
   >
-    <Tab.Screen name="Home" component={HomeNavigator} />
-    <Tab.Screen name="Profile" component={ProfileNavigator} />
+    <Tab.Screen
+      name="SearchScreen"
+      component={SearchScreen}
+      options={{
+        title: 'Search',
+      }}
+    />
+    <Tab.Screen
+      name="HomeScreen"
+      component={Home}
+      options={() => ({
+        title: 'Home',
+      })}
+    />
+    <Tab.Screen
+      name="CartScreen"
+      component={CartScreen}
+      options={{
+        title: 'Cart',
+      }}
+    />
   </Tab.Navigator>
 )
 

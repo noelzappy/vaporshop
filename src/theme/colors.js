@@ -4,7 +4,10 @@ const colors = {
   lightPurple: '#9388db',
   lightGrayPurple: '#f7f7fb',
   pink: '#ff3d69',
-  gray: '#797777',
+  gray: 'rgba(105,105,105,0.5)',
+  black: '#000',
+  white: '#fff',
+  appGray: 'rgb(105,105,105)',
 }
 
 export default colors
