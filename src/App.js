@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { View } from 'react-native'
+import { ActivityIndicator } from 'react-native'
 import { Provider } from 'react-redux'
-import store from 'utils/store'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { store } from 'utils/store'
 import 'utils/ignore'
 
 // assets
@@ -24,10 +25,24 @@ const App = () => {
 
   return didLoad ? (
     <Provider store={store}>
-      <Navigator />
+      <SafeAreaView
+        style={{
+          flex: 1,
+        }}
+      >
+        <Navigator />
+      </SafeAreaView>
     </Provider>
   ) : (
-    <View />
+    <SafeAreaView
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <ActivityIndicator />
+    </SafeAreaView>
   )
 }
 

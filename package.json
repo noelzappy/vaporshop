@@ -17,7 +17,7 @@
     "@react-navigation/native": "^5.8.10",
     "@react-navigation/stack": "^5.12.8",
     "@reduxjs/toolkit": "^1.5.1",
-    "axios": "^0.24.0",
+    "axios": "^0.25.0",
     "expo": "^44.0.0",
     "expo-asset": "~8.4.5",
     "expo-cli": "^4.13.0",
@@ -41,7 +41,10 @@
     "react-native-web": "0.17.1",
     "react-redux": "^7.1.1",
     "redux": "^4.0.4",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+    "redux-persist": "^6.0.0",
+    "redux-persist-expo-filesystem": "^2.0.0",
+    "redux-thunk": "^2.4.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",

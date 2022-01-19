@@ -1,25 +1,20 @@
-import {
-  configureStore,
-  combineReducers,
-  getDefaultMiddleware,
-} from '@reduxjs/toolkit'
-import logger from 'redux-logger'
-import appReducer from 'slices/app.slice'
+import thunk from 'redux-thunk'
+import { createStore, combineReducers, applyMiddleware } from 'redux'
+import { persistStore, persistReducer } from 'redux-persist'
+import ExpoFileSystemStorage from 'redux-persist-expo-filesystem'
+import appReducer from './Reducer'
 
 const rootReducer = combineReducers({
   app: appReducer,
   // add more reducers
 })
 
-const defaultMiddleware = getDefaultMiddleware({
-  serializableCheck: false,
-  immutableCheck: false,
-})
+const persistConfig = {
+  key: 'root',
+  storage: ExpoFileSystemStorage,
+}
 
-const store = configureStore({
-  reducer: rootReducer,
-  // eslint-disable-next-line no-undef
-  middleware: __DEV__ ? defaultMiddleware.concat(logger) : defaultMiddleware,
-})
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 
-export default store
+export const store = createStore(persistedReducer, applyMiddleware(thunk))
+export const persistor = persistStore(store)

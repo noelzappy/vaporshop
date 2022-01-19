@@ -3,7 +3,7 @@ const colors = {
   purple: '#8100ff',
   lightPurple: '#9388db',
   lightGrayPurple: '#f7f7fb',
-  pink: '#ff3d69',
+  pink: '#FB8282',
   gray: 'rgba(105,105,105,0.5)',
   black: '#000',
   white: '#fff',

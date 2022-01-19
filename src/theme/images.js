@@ -1,8 +1,8 @@
 import { Asset } from 'expo-asset'
 
 const images = {
-  logo_sm: require('../../assets/images/logo-sm.png'),
-  logo_lg: require('../../assets/images/logo-lg.png'),
+  logo: require('../../assets/images/applogo.png'),
+  demo: require('../../assets/images/demo.png'),
 }
 
 // image preloading

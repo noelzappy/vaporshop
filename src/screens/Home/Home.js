@@ -1,16 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {
-  Text, View, StatusBar, TouchableOpacity,
+  Text,
+  View,
+  StatusBar,
+  TouchableOpacity,
+  FlatList,
+  ActivityIndicator,
 } from 'react-native'
-import { colors } from 'theme'
-import { Header } from 'react-native-elements'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { colors, appStyles, images } from 'theme'
+import { Header, Image } from 'react-native-elements'
 import FontIcon from 'react-native-vector-icons/FontAwesome5'
-import { height } from 'react-native-dimension'
+import { height, width } from 'react-native-dimension'
+import { getProducts } from '../../utils/Actions'
 
 const Home = ({ navigation }) => (
-  <SafeAreaView>
+  <>
     <Header
       leftComponent={() => (
         <TouchableOpacity
@@ -27,37 +32,67 @@ const Home = ({ navigation }) => (
       }}
       backgroundColor={colors.white}
     />
-    <View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-          // flex: 1,
-        }}
-      >
-        <Text
-          style={{
-            transform: [{ rotate: '-90deg' }],
-            fontSize: height(3.5),
-            // marginTop: height(5),
+
+    <FlatList
+      data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 77, 8]}
+      renderItem={() => (
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() => {
+            getProducts()
           }}
         >
-          VAPORS VAPE SHOP
-        </Text>
+          <View
+            style={{
+              marginHorizontal: height(3),
+              marginVertical: height(1.6),
+              backgroundColor: colors.pink,
+              borderRadius: width(3),
+            }}
+          >
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingVertical: height(2),
+                height: height(25),
+                marginBottom: height(1),
+              }}
+            >
+              <View
+                style={{
+                  marginTop: height(1),
+                }}
+              >
+                <Image
+                  style={{
+                    width: height(20),
+                    height: '100%',
+                  }}
+                  source={images.demo}
+                  height={height(10)}
+                  width={width(50)}
+                  PlaceholderContent={<ActivityIndicator />}
+                />
+              </View>
+              <View>
+                <Text
+                  style={{
+                    ...appStyles.textMaxi,
+                    paddingTop: height(1),
+                  }}
+                >
+                  Hello World
+                </Text>
+              </View>
+            </View>
+          </View>
+        </TouchableOpacity>
+      )}
+    />
 
-        <View
-          style={
-            {
-              // width: width(70),
-            }
-          }
-        >
-          <Text>Hello World</Text>
-        </View>
-      </View>
-    </View>
     <StatusBar barStyle="dark-content" />
-  </SafeAreaView>
+  </>
 )
 
 Home.propTypes = {
