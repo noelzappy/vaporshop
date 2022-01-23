@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import {
   ADD_TO_CART,
+  CLEAR_CART,
   CLEAR_CATEGORY_ERRORS,
   CLEAR_PRODUCT_ERRORS,
   GET_CATEGORIES_FAILED,
@@ -83,6 +84,11 @@ function appReducer(state = INTIAL_STATE, action) {
         ...state.shoppingCart,
       }
     }
+    case CLEAR_CART:
+      return {
+        ...state,
+        shoppingCart: [],
+      }
 
     default:
       return state

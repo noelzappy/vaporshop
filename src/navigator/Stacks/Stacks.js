@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { colors } from 'theme'
 import TabNavigator from '../Tabs/Tabs'
 import Products from '../../screens/Products/Products'
+import Checkout from '../../screens/Checkout/Checkout'
 
 // ------------------------------------
 // Constants
@@ -29,6 +30,7 @@ const HomeNavigator = () => (
   >
     <Stack.Screen name="Home" component={TabNavigator} />
     <Stack.Screen name="ProductsScreen" component={Products} />
+    <Stack.Screen name="CheckoutScreen" component={Checkout} />
   </Stack.Navigator>
 )
 

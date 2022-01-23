@@ -10,8 +10,8 @@ import ProductItem from '../../components/ProductItem'
 export default function Products({ navigation }) {
   const { app } = useSelector((state) => state)
   const { products, shoppingCart } = app
+ 
 
-  //   console.log(shoppingCart)
 
   return (
     <View>

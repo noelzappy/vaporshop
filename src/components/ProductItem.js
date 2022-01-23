@@ -29,6 +29,7 @@ export default function ProductItem({ item, shoppingCart }) {
         overflow: 'hidden',
         display: 'flex',
       }}
+      key={item.id}
     >
       <View
         style={{

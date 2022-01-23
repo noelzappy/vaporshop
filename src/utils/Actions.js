@@ -8,6 +8,7 @@ export const CLEAR_CATEGORY_ERRORS = 'CLEAR_CATEGORY_ERRORS'
 export const CLEAR_PRODUCT_ERRORS = 'CLEAR_PRODUCT_ERRORS'
 export const ADD_TO_CART = 'ADD_TO_CART'
 export const REMOVE_FROM_CART = 'REMOVE_FROM_CART'
+export const CLEAR_CART = 'CLEAR_CART'
 
 export const headers = {
   Authorization: 'Basic YWRtaW5AdmFwb3Jzc3VwMjpBbnRvbmJiMQ',
@@ -78,4 +79,53 @@ export function addToCart(item) {
 
 export function removeFromCart(item) {
   return (dispatch) => dispatch({ type: REMOVE_FROM_CART, payload: item })
+}
+
+export function clearCart() {
+  return (dispatch) => dispatch({ type: CLEAR_CART })
+}
+export function numberFormatter(
+  num,
+  digits,
+  formatAll = false,
+  useNegatives = false,
+) {
+  if (num > 1000000 || formatAll) {
+    const si = [
+      { value: 1, symbol: '' },
+      { value: 1e3, symbol: 'k' },
+      { value: 1e6, symbol: 'M' },
+      { value: 1e9, symbol: 'G' },
+      { value: 1e12, symbol: 'T' },
+      { value: 1e15, symbol: 'P' },
+      { value: 1e18, symbol: 'E' },
+    ]
+    const rx = /\.0+$|(\.[0-9]*[1-9])0+$/
+    let i
+    if (num < 0) {
+      // abs(-1)
+      const numCon = Math.abs(num)
+      for (i = si.length - 1; i > 0; i--) {
+        if (numCon >= si[i].value) {
+          break
+        }
+      }
+
+      if (useNegatives) {
+        return `-${
+          (numCon / si[i].value).toFixed(digits).replace(rx, '') + si[i].symbol
+        }`
+      }
+      return `(${
+        (numCon / si[i].value).toFixed(digits).replace(rx, '') + si[i].symbol
+      })`
+    }
+    for (i = si.length - 1; i > 0; i--) {
+      if (num >= si[i].value) {
+        break
+      }
+    }
+    return (num / si[i].value).toFixed(digits).replace(rx, '') + si[i].symbol
+  }
+  return num.toFixed(digits).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
