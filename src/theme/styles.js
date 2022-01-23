@@ -1,13 +1,17 @@
-import { height } from 'react-native-dimension'
+import { Platform } from 'react-native'
+import { height, totalSize } from 'react-native-dimension'
 
-const appStyles = {
-  textReqular: {
-    fontSize: height(2.3),
-  },
-  textMaxi: {
-    fontSize: height(4),
-    fontWeight: 'bold',
-  },
+
+export const fontSizes = {
+  huge: Platform.OS === 'ios' ? totalSize(2.8) : totalSize(3),
+  big: Platform.OS === 'ios' ? totalSize(2.3) : totalSize(2.5),
+  maxi: Platform.OS === 'ios' ? totalSize(1.8) : totalSize(2),
+  normal: Platform.OS === 'ios' ? totalSize(1.3) : totalSize(1.5),
+  small: Platform.OS === 'ios' ? totalSize(0.8) : totalSize(1),
 }
 
-export default appStyles
+ export const appStyles = {
+
+}
+
+
