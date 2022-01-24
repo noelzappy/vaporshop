@@ -1,13 +1,28 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { MaterialIcons } from '@expo/vector-icons'
 import PropTypes from 'prop-types'
-import { Text, View, StatusBar, TouchableOpacity, FlatList } from 'react-native'
+import {
+  Text,
+  View,
+  StatusBar,
+  TouchableOpacity,
+  FlatList,
+  ActivityIndicator,
+} from 'react-native'
 import { colors, fontSizes } from 'theme'
-import { Header } from 'react-native-elements'
+import { Header, Input, Dialog } from 'react-native-elements'
 import FontIcon from 'react-native-vector-icons/FontAwesome5'
 import { useDispatch, useSelector } from 'react-redux'
 import { height, width } from 'react-native-dimension'
 import DropdownAlert from 'react-native-dropdownalert'
-import { clearCategoryErrors } from '../../utils/Actions'
+import fuzzysort from 'fuzzysort'
+import Spinner from 'react-native-loading-spinner-overlay'
+
+import {
+  clearCategoryErrors,
+  clearFilterErrors,
+  getProductsFilteredByFolder,
+} from '../../utils/Actions'
 
 const Home = ({ navigation }) => {
   const dispatch = useDispatch()
@@ -18,7 +33,47 @@ const Home = ({ navigation }) => {
     getCategoriesFailedError,
     getCategoriesFailed,
     getCategoriesSuccess,
+
+    folderFilteredProducts,
+    folderFilteredProductsError,
+    folderFilteredProductsFailed,
+    folderFilteredProductsSuccess,
   } = app
+
+  const [searchResult, setSearchResult] = useState([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingMessage, setIsLoadingMessage] = useState(null)
+
+  const resetLoader = () => {
+    setIsLoading(false)
+    setIsLoadingMessage(null)
+  }
+
+  useEffect(() => {
+    if (
+      folderFilteredProductsSuccess &&
+      !folderFilteredProductsFailed &&
+      getCategoriesFailedError === null &&
+      folderFilteredProducts !== null
+    ) {
+      resetLoader()
+      navigation.navigate('ProductsScreen')
+    } else if (folderFilteredProductsFailed && !folderFilteredProductsSuccess) {
+      dropDownAlert.current.alertWithType(
+        'error',
+        'Categories',
+        folderFilteredProductsError,
+      )
+      dispatch(clearFilterErrors())
+      resetLoader()
+    }
+  }, [
+    folderFilteredProducts,
+    folderFilteredProductsError,
+    folderFilteredProductsFailed,
+    folderFilteredProductsSuccess,
+  ])
 
   useEffect(() => {
     if (getCategoriesFailed === true && getCategoriesSuccess === false) {
@@ -30,6 +85,28 @@ const Home = ({ navigation }) => {
       dispatch(clearCategoryErrors())
     }
   }, [getCategoriesFailed, getCategoriesSuccess])
+
+  useEffect(() => {
+    try {
+      const foundArray = fuzzysort.go(
+        searchTerm,
+        productCategories.slice(0, 100),
+        {
+          key: 'name',
+          limit: 100,
+        },
+      )
+
+      const newArr = []
+
+      foundArray.forEach((item) => {
+        newArr.push(item.obj)
+      })
+      setSearchResult(newArr)
+    } catch (error) {
+      console.log(error)
+    }
+  }, [searchTerm])
 
   return (
     <>
@@ -55,14 +132,55 @@ const Home = ({ navigation }) => {
         backgroundColor={colors.white}
       />
 
+      <Dialog isVisible={isLoading} onBackdropPress={() => {}}>
+        <ActivityIndicator size="large" color={colors.pink} />
+
+        <Text
+          style={{
+            fontSize: fontSizes.big,
+            textAlign: 'center',
+          }}
+        >
+          {isLoadingMessage}
+        </Text>
+      </Dialog>
+
+      <Input
+        placeholder="Search.."
+        leftIcon={() => (
+          <MaterialIcons name="search" size={24} color={colors.white} />
+        )}
+        onChangeText={(text) => setSearchTerm(text)}
+        inputContainerStyle={{
+          backgroundColor: colors.gray,
+          paddingHorizontal: width(1.6),
+          borderBottomWidth: 0,
+          height: height(6),
+          marginTop: height(1),
+          borderRadius: width(3),
+        }}
+        value={searchTerm}
+        placeholderTextColor={colors.white}
+        inputStyle={{
+          color: colors.white,
+          fontSize: fontSizes.big,
+        }}
+      />
+
       <FlatList
-        data={productCategories}
-        renderItem={({ item, index }) => {
+        data={searchResult.length > 0 ? searchResult : productCategories}
+        renderItem={({ item }) => {
           return (
             <TouchableOpacity
               activeOpacity={0.7}
               onPress={() => {
-                navigation.navigate('ProductsScreen')
+                setIsLoading(true)
+                setIsLoading('Fetching Products...')
+                item.productFolder
+                  ? dispatch(
+                      getProductsFilteredByFolder(item.productFolder.meta.href),
+                    )
+                  : dispatch(getProductsFilteredByFolder(item.meta.href))
               }}
             >
               <View
@@ -105,19 +223,6 @@ const Home = ({ navigation }) => {
                       PlaceholderContent={<ActivityIndicator />}
                     /> */}
 
-                  {/* <FastImage
-                      source={{
-                        uri: 'https://unsplash.it/400/400?image=1',
-                        headers: { Authorization: 'someAuthToken' },
-                        priority: FastImage.priority.normal,
-                      }}
-                      resizeMode={FastImage.resizeMode.contain}
-                      style={{
-                        width: height(20),
-                        height: '100%',
-                      }}
-                    /> */}
-                  {/* </View> */}
                   <View>
                     <Text
                       style={{

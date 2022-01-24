@@ -60,6 +60,7 @@ const TabNavigator = () => {
         labelStyle: {
           display: 'none',
         },
+        keyboardHidesTabBar: true,
       }}
       initialRouteName="HomeScreen"
       swipeEnabled={false}

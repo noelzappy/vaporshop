@@ -9,6 +9,11 @@ export const CLEAR_PRODUCT_ERRORS = 'CLEAR_PRODUCT_ERRORS'
 export const ADD_TO_CART = 'ADD_TO_CART'
 export const REMOVE_FROM_CART = 'REMOVE_FROM_CART'
 export const CLEAR_CART = 'CLEAR_CART'
+export const GET_FOLDER_FILTERED_PRODUCTS_SUCCESS =
+  'GET_FILTERED_PRODUCTS_SUCCESS'
+export const GET_FOLDER_FILTERED_PRODUCTS_FAILED =
+  'GET_FILTERED_PRODUCTS_FAILED'
+export const CLEAR_FILTER_ERRORS = 'CLEAR_FILTER_ERRORS'
 
 export const headers = {
   Authorization: 'Basic YWRtaW5AdmFwb3Jzc3VwMjpBbnRvbmJiMQ',
@@ -17,7 +22,7 @@ const baseURL = 'https://online.moysklad.ru/api/remap/1.2/entity'
 
 export const getProducts = () => (dispatch) => {
   axios
-    .get(`${baseURL}/product`, { headers })
+    .get(`${baseURL}/assortment`, { headers })
     .then((res) =>
       dispatch({
         type: GET_PRODUCTS_SUCCESS,
@@ -33,9 +38,33 @@ export const getProducts = () => (dispatch) => {
     })
 }
 
+export const getProductsFilteredByFolder = (folderURL) => (dispatch) => {
+  axios
+    .get(`${baseURL}/assortment?filter=productFolder=${folderURL}`, { headers })
+    .then((res) =>
+      dispatch({
+        type: GET_FOLDER_FILTERED_PRODUCTS_SUCCESS,
+        payload: res.data.rows,
+      }),
+    )
+    .catch((err) => {
+      // console.log(err.response.data)
+      dispatch({
+        type: GET_FOLDER_FILTERED_PRODUCTS_FAILED,
+        payload: 'Error fetching products. Please check your internet',
+      })
+    })
+}
+
+export const clearFilterErrors = () => (dispatch) => {
+  dispatch({
+    type: CLEAR_FILTER_ERRORS,
+  })
+}
+
 export const getCategories = () => (dispatch) => {
   axios
-    .get(`${baseURL}/group`, { headers })
+    .get(`${baseURL}/productfolder`, { headers })
     .then((res) =>
       dispatch({
         type: GET_CATEGORIES_SUCCESS,

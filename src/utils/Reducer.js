@@ -3,9 +3,12 @@ import {
   ADD_TO_CART,
   CLEAR_CART,
   CLEAR_CATEGORY_ERRORS,
+  CLEAR_FILTER_ERRORS,
   CLEAR_PRODUCT_ERRORS,
   GET_CATEGORIES_FAILED,
   GET_CATEGORIES_SUCCESS,
+  GET_FOLDER_FILTERED_PRODUCTS_FAILED,
+  GET_FOLDER_FILTERED_PRODUCTS_SUCCESS,
   GET_PRODUCTS_FAILED,
   GET_PRODUCTS_SUCCESS,
   REMOVE_FROM_CART,
@@ -23,6 +26,11 @@ const INTIAL_STATE = {
   getCategoriesSuccess: false,
 
   shoppingCart: [],
+
+  folderFilteredProducts: null,
+  folderFilteredProductsError: null,
+  folderFilteredProductsFailed: false,
+  folderFilteredProductsSuccess: false,
 }
 
 function appReducer(state = INTIAL_STATE, action) {
@@ -42,6 +50,22 @@ function appReducer(state = INTIAL_STATE, action) {
         getProductsFailed: true,
         getProductsSuccess: false,
         getProductsFailedError: action.payload,
+      }
+    case GET_FOLDER_FILTERED_PRODUCTS_SUCCESS:
+      return {
+        ...state,
+        folderFilteredProducts: action.payload,
+        folderFilteredProductsError: null,
+        folderFilteredProductsFailed: false,
+        folderFilteredProductsSuccess: true,
+      }
+    case GET_FOLDER_FILTERED_PRODUCTS_FAILED:
+      return {
+        ...state,
+        folderFilteredProducts: null,
+        folderFilteredProductsError: action.payload,
+        folderFilteredProductsFailed: true,
+        folderFilteredProductsSuccess: false,
       }
     case GET_CATEGORIES_FAILED:
       return {
@@ -64,6 +88,12 @@ function appReducer(state = INTIAL_STATE, action) {
         ...state,
         getCategoriesFailed: false,
         getCategoriesFailedError: null,
+      }
+    case CLEAR_FILTER_ERRORS:
+      return {
+        ...state,
+        folderFilteredProductsError: null,
+        folderFilteredProductsFailed: false,
       }
     case CLEAR_PRODUCT_ERRORS:
       return {

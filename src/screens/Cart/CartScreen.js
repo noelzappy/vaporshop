@@ -3,6 +3,7 @@ import { View, Text, FlatList, TouchableOpacity } from 'react-native'
 import { Button, Header } from 'react-native-elements'
 import { useDispatch, useSelector } from 'react-redux'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import FontIcon from 'react-native-vector-icons/FontAwesome5'
 import _ from 'lodash'
 import { colors, fontSizes } from 'theme'
 import { height, width } from 'react-native-dimension'
@@ -39,6 +40,20 @@ export default function CartScreen({ navigation }) {
   return (
     <View>
       <Header
+        leftComponent={() => (
+          <TouchableOpacity
+            onPress={() => {
+              navigation.openDrawer()
+            }}
+          >
+            <FontIcon
+              name="indent"
+              color={colors.black}
+              size={height(4)}
+              solid
+            />
+          </TouchableOpacity>
+        )}
         centerComponent={() => (
           <Text
             style={{
@@ -127,7 +142,7 @@ export default function CartScreen({ navigation }) {
                     fontWeight: 'bold',
                   }}
                 >
-                  {numberFormatter(cartCount * item.buyPrice.value)} UAH
+                  {numberFormatter(cartCount * item.buyPrice.value)} ₴
                 </Text>
               </View>
             )

@@ -1,17 +1,41 @@
-import React from 'react'
-import { View, Text, FlatList, TouchableOpacity } from 'react-native'
-import { AntDesign } from '@expo/vector-icons'
+import React, { useState, useEffect } from 'react'
+import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native'
+import { AntDesign, MaterialIcons } from '@expo/vector-icons'
 import { useSelector } from 'react-redux'
-import { colors, fontSizes } from 'theme'
+import { colors, fontSizes, images } from 'theme'
 import { height, width } from 'react-native-dimension'
-import { Header } from 'react-native-elements'
+import fuzzysort from 'fuzzysort'
+import { Header, Input } from 'react-native-elements'
 import ProductItem from '../../components/ProductItem'
 
 export default function Products({ navigation }) {
   const { app } = useSelector((state) => state)
-  const { products, shoppingCart } = app
- 
+  const { folderFilteredProducts, shoppingCart } = app
 
+  const [searchResult, setSearchResult] = useState([])
+  const [searchTerm, setSearchTerm] = useState('')
+
+  useEffect(() => {
+    try {
+      const foundArray = fuzzysort.go(
+        searchTerm,
+        folderFilteredProducts.slice(0, 100),
+        {
+          key: 'name',
+          limit: 100,
+        },
+      )
+
+      const newArr = []
+
+      foundArray.forEach((item) => {
+        newArr.push(item.obj)
+      })
+      setSearchResult(newArr)
+    } catch (error) {
+      console.log(error)
+    }
+  }, [searchTerm])
 
   return (
     <View>
@@ -33,12 +57,61 @@ export default function Products({ navigation }) {
         )}
         backgroundColor={colors.white}
       />
+      <Input
+        placeholder="Search.."
+        leftIcon={() => (
+          <MaterialIcons name="search" size={24} color={colors.white} />
+        )}
+        onChangeText={(text) => setSearchTerm(text)}
+        inputContainerStyle={{
+          backgroundColor: colors.pink,
+          paddingHorizontal: width(1.6),
+          borderBottomWidth: 0,
+          height: height(6),
+          marginTop: height(1),
+          borderRadius: width(3),
+        }}
+        value={searchTerm}
+        placeholderTextColor={colors.white}
+        inputStyle={{
+          color: colors.white,
+          fontSize: fontSizes.big,
+        }}
+      />
+
       <FlatList
         initialNumToRender={30}
-        data={products}
+        data={searchResult.length > 0 ? searchResult : folderFilteredProducts}
         renderItem={({ item }) => {
           return <ProductItem item={item} shoppingCart={shoppingCart} />
         }}
+        ListEmptyComponent={() => (
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: height(5),
+            }}
+          >
+            <Image
+              style={{
+                width: width(70),
+                height: height(20),
+                backgroundColor: colors.pink,
+                borderRadius: width(2),
+              }}
+              source={images.notfound}
+            />
+            <Text
+              style={{
+                fontSize: fontSizes.huge,
+                fontWeight: 'bold',
+              }}
+            >
+              No Product Found In Category
+            </Text>
+          </View>
+        )}
       />
 
       <TouchableOpacity
@@ -48,7 +121,7 @@ export default function Products({ navigation }) {
           borderRadius: 30,
           backgroundColor: colors.black,
           position: 'absolute',
-          bottom: height(10),
+          bottom: height(20),
           right: 10,
           flexWrap: 'wrap',
           justifyContent: 'center',
