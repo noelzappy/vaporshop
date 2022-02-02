@@ -14,6 +14,7 @@ export const GET_FOLDER_FILTERED_PRODUCTS_SUCCESS =
 export const GET_FOLDER_FILTERED_PRODUCTS_FAILED =
   'GET_FILTERED_PRODUCTS_FAILED'
 export const CLEAR_FILTER_ERRORS = 'CLEAR_FILTER_ERRORS'
+export const CLEAR_FILTERED_PRODUCTS = 'CLEAR_FILTERED_PRODUCTS'
 
 export const headers = {
   Authorization: 'Basic YWRtaW5AdmFwb3Jzc3VwMjpBbnRvbmJiMQ',
@@ -86,6 +87,11 @@ export const clearCategoryErrors = () => (dispatch) => {
     type: CLEAR_CATEGORY_ERRORS,
   })
 }
+
+export const clearFilteredProducts = () => (dispatch) =>
+  dispatch({
+    type: CLEAR_FILTERED_PRODUCTS,
+  })
 
 export const clearProductErrors = () => (dispatch) => {
   dispatch({

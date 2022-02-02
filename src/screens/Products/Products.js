@@ -83,6 +83,7 @@ export default function Products({ navigation }) {
         initialNumToRender={30}
         data={searchResult.length > 0 ? searchResult : folderFilteredProducts}
         renderItem={({ item }) => {
+          // console.log(item)
           return <ProductItem item={item} shoppingCart={shoppingCart} />
         }}
         ListEmptyComponent={() => (

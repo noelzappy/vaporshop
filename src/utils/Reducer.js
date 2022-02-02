@@ -3,6 +3,7 @@ import {
   ADD_TO_CART,
   CLEAR_CART,
   CLEAR_CATEGORY_ERRORS,
+  CLEAR_FILTERED_PRODUCTS,
   CLEAR_FILTER_ERRORS,
   CLEAR_PRODUCT_ERRORS,
   GET_CATEGORIES_FAILED,
@@ -88,6 +89,13 @@ function appReducer(state = INTIAL_STATE, action) {
         ...state,
         getCategoriesFailed: false,
         getCategoriesFailedError: null,
+      }
+    case CLEAR_FILTERED_PRODUCTS:
+      return {
+        ...state,
+        folderFilteredProducts: null,
+        folderFilteredProductsError: null,
+        folderFilteredProductsFailed: false,
       }
     case CLEAR_FILTER_ERRORS:
       return {

@@ -80,7 +80,7 @@ export default function ProductItem({ item, shoppingCart }) {
                 color: colors.black,
               }}
             >
-              {item.buyPrice.value} ₴
+              {item.salePrices[0].value} ₴
             </Text>
           </View>
           <View

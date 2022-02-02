@@ -16,10 +16,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { height, width } from 'react-native-dimension'
 import DropdownAlert from 'react-native-dropdownalert'
 import fuzzysort from 'fuzzysort'
-import Spinner from 'react-native-loading-spinner-overlay'
 
 import {
   clearCategoryErrors,
+  clearFilteredProducts,
   clearFilterErrors,
   getProductsFilteredByFolder,
 } from '../../utils/Actions'
@@ -51,6 +51,10 @@ const Home = ({ navigation }) => {
   }
 
   useEffect(() => {
+    dispatch(clearFilteredProducts())
+  }, [])
+
+  useEffect(() => {
     if (
       folderFilteredProductsSuccess &&
       !folderFilteredProductsFailed &&
@@ -76,7 +80,12 @@ const Home = ({ navigation }) => {
   ])
 
   useEffect(() => {
-    if (getCategoriesFailed === true && getCategoriesSuccess === false) {
+    if (
+      getCategoriesFailed === true &&
+      getCategoriesSuccess === false &&
+      folderFilteredProducts &&
+      folderFilteredProducts.length
+    ) {
       dropDownAlert.current.alertWithType(
         'error',
         'Categories',
@@ -196,7 +205,7 @@ const Home = ({ navigation }) => {
                     justifyContent: 'center',
                     alignItems: 'center',
                     paddingVertical: height(2),
-                    height: height(10),
+                    height: height(25),
                     marginBottom: height(1),
                   }}
                 >

@@ -2,7 +2,12 @@ import React, { useState, useEffect, useRef } from 'react'
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
 import { Button, Header, Input } from 'react-native-elements'
 import { colors, fontSizes } from 'theme'
-import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
+import {
+  AntDesign,
+  Ionicons,
+  MaterialCommunityIcons,
+  FontAwesome,
+} from '@expo/vector-icons'
 import PhoneInput from 'react-native-phone-number-input'
 import { useDispatch, useSelector } from 'react-redux'
 import { width, height } from 'react-native-dimension'
@@ -20,6 +25,7 @@ export default function Checkout({ navigation }) {
   const [userEmail, setUserEmail] = useState(null)
   const [userDeliveryAddress, setUserDeliveryAddress] = useState('')
   const [orderComment, setOrderComment] = useState('')
+  const [paymentMethod, settPaymentMethod] = useState('cash')
 
   const calcTotalCost = () => {
     let tempCost = 0
@@ -98,7 +104,7 @@ export default function Checkout({ navigation }) {
               ref={phoneInput}
               defaultCode="UA"
               onChangeFormattedText={(text) => {
-                console.log('Formatted', text)
+                setUserPhoneNumber(text)
               }}
               value={userPhoneNumber}
               containerStyle={{
@@ -165,6 +171,97 @@ export default function Checkout({ navigation }) {
             multiline
             numberOfLines={4}
           />
+          <View
+            style={{
+              paddingHorizontal: width(3),
+              marginBottom: height(2),
+            }}
+          >
+            <Text
+              style={{
+                fontSize: fontSizes.maxi,
+                fontWeight: 'bold',
+                paddingBottom: height(1),
+              }}
+            >
+              Payment Method
+            </Text>
+            <Button
+              containerStyle={{
+                // borderRadius: width(5),
+                borderWidth: 1,
+                borderColor: colors.pink,
+                justifyContent: 'flex-start',
+                alignItems: 'flex-start',
+                backgroundColor:
+                  paymentMethod === 'card' ? colors.pink : colors.white,
+              }}
+              buttonStyle={{
+                paddingVertical: height(1),
+                paddingHorizontal: width(5),
+                backgroundColor: 'transparent',
+                justifyContent: 'flex-start',
+                alignItems: 'flex-start',
+                width: '100%',
+              }}
+              titleStyle={{
+                fontSize: fontSizes.big,
+                color: colors.black,
+                textAlign: 'left',
+                paddingLeft: width(3),
+              }}
+              title="MASTERCARD/VISA"
+              onPress={() => {
+                settPaymentMethod('card')
+              }}
+              iconPosition="left"
+              icon={() => (
+                <FontAwesome
+                  name="credit-card"
+                  size={24}
+                  color={colors.black}
+                />
+              )}
+            />
+
+            <Button
+              containerStyle={{
+                // borderRadius: width(5),
+                borderWidth: 1,
+                borderColor: colors.pink,
+                justifyContent: 'flex-start',
+                alignItems: 'flex-start',
+                backgroundColor:
+                  paymentMethod === 'cash' ? colors.pink : colors.white,
+              }}
+              buttonStyle={{
+                paddingVertical: height(1),
+                paddingHorizontal: width(5),
+                backgroundColor: 'transparent',
+                width: '100%',
+                justifyContent: 'flex-start',
+                alignItems: 'flex-start',
+              }}
+              titleStyle={{
+                fontSize: fontSizes.big,
+                color: colors.black,
+                textAlign: 'left',
+                paddingLeft: width(3),
+              }}
+              title="CASH"
+              onPress={() => {
+                settPaymentMethod('cash')
+              }}
+              iconPosition="left"
+              icon={() => (
+                <MaterialCommunityIcons
+                  name="cash"
+                  size={28}
+                  color={colors.black}
+                />
+              )}
+            />
+          </View>
 
           <View
             style={{
