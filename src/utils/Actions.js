@@ -15,9 +15,15 @@ export const GET_FOLDER_FILTERED_PRODUCTS_FAILED =
   'GET_FILTERED_PRODUCTS_FAILED'
 export const CLEAR_FILTER_ERRORS = 'CLEAR_FILTER_ERRORS'
 export const CLEAR_FILTERED_PRODUCTS = 'CLEAR_FILTERED_PRODUCTS'
+export const ORDER_PLACED_SUCCESS = 'ORDER_PLACED_SUCCESS'
+export const ORDER_PLACED_FAILED = 'ORDER_PLACED_FAILED'
+export const CLEAR_PLACE_ORDER_ERROR = 'CLEAR_PLACE_ORDER_ERROR'
+
+export const APP_TOKEN = 'YWRtaW5AdmFwb3Jzc3VwMjpBbnRvbmJiMQ'
+export const TELEGRAM_TOKEN = '5186679461:AAFJo2Mz001hRuATFfKHu0UJ3clSQKmHjwI'
 
 export const headers = {
-  Authorization: 'Basic YWRtaW5AdmFwb3Jzc3VwMjpBbnRvbmJiMQ',
+  Authorization: `Basic ${APP_TOKEN}`,
 }
 const baseURL = 'https://online.moysklad.ru/api/remap/1.2/entity'
 
@@ -163,4 +169,34 @@ export function numberFormatter(
     return (num / si[i].value).toFixed(digits).replace(rx, '') + si[i].symbol
   }
   return num.toFixed(digits).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}
+
+export function sendDataToBot({ userDetails, data }) {
+  return (dispatch) => {
+    axios
+      .post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+        chat_id: '@vapors_chat_test',
+        text: `<b>NEW ORDER</b>\n\nPerson Name: ${userDetails.userName}\nEmail: ${userDetails.userEmail}\nPhone Number: ${userDetails.userPhoneNumber}\nDelivery Address: ${userDetails.userDeliveryAddress}\nComment: ${userDetails.orderComment}\nPayment Method: ${userDetails.paymentMethod}\n${data}
+        `,
+        parse_mode: 'HTML',
+      })
+      .then(() => {
+        dispatch({
+          type: ORDER_PLACED_SUCCESS,
+        })
+      })
+      .catch((error) => {
+        // console.log(error.response.data)
+        dispatch({
+          type: ORDER_PLACED_FAILED,
+        })
+      })
+  }
+}
+
+export function clearOrderErrors() {
+  return (dispatch) =>
+    dispatch({
+      type: CLEAR_PLACE_ORDER_ERROR,
+    })
 }

@@ -5,6 +5,7 @@ import {
   CLEAR_CATEGORY_ERRORS,
   CLEAR_FILTERED_PRODUCTS,
   CLEAR_FILTER_ERRORS,
+  CLEAR_PLACE_ORDER_ERROR,
   CLEAR_PRODUCT_ERRORS,
   GET_CATEGORIES_FAILED,
   GET_CATEGORIES_SUCCESS,
@@ -12,6 +13,8 @@ import {
   GET_FOLDER_FILTERED_PRODUCTS_SUCCESS,
   GET_PRODUCTS_FAILED,
   GET_PRODUCTS_SUCCESS,
+  ORDER_PLACED_FAILED,
+  ORDER_PLACED_SUCCESS,
   REMOVE_FROM_CART,
 } from './Actions'
 
@@ -32,6 +35,9 @@ const INTIAL_STATE = {
   folderFilteredProductsError: null,
   folderFilteredProductsFailed: false,
   folderFilteredProductsSuccess: false,
+
+  orderPlacementSuccess: false,
+  orderPlacementFailed: false,
 }
 
 function appReducer(state = INTIAL_STATE, action) {
@@ -126,6 +132,24 @@ function appReducer(state = INTIAL_STATE, action) {
       return {
         ...state,
         shoppingCart: [],
+      }
+    case ORDER_PLACED_SUCCESS:
+      return {
+        ...state,
+        orderPlacementSuccess: true,
+        orderPlacementFailed: false,
+      }
+    case ORDER_PLACED_FAILED:
+      return {
+        ...state,
+        orderPlacementFailed: true,
+        orderPlacementSuccess: false,
+      }
+    case CLEAR_PLACE_ORDER_ERROR:
+      return {
+        ...state,
+        orderPlacementFailed: false,
+        orderPlacementSuccess: false,
       }
 
     default:

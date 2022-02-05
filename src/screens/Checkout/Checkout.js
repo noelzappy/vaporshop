@@ -9,15 +9,24 @@ import {
   FontAwesome,
 } from '@expo/vector-icons'
 import PhoneInput from 'react-native-phone-number-input'
+import DropdownAlert from 'react-native-dropdownalert'
+import numeral from 'numeral'
 import { useDispatch, useSelector } from 'react-redux'
 import { width, height } from 'react-native-dimension'
-import { numberFormatter } from '../../utils/Actions'
+import {
+  numberFormatter,
+  sendDataToBot,
+  clearOrderErrors,
+  clearCart,
+} from '../../utils/Actions'
 
-export default function Checkout({ navigation }) {
+export default function Checkout({ navigation, route }) {
   const dispatch = useDispatch()
   const { app } = useSelector((state) => state)
-  const { shoppingCart } = app
+  const { shoppingCart, orderPlacementSuccess, orderPlacementFailed } = app
   const phoneInput = useRef(null)
+  const dropDownAlert = useRef(null)
+  const { totalCost } = route.params
 
   const [totalCartCost, setTotalCartCost] = useState(0)
   const [userName, setUserName] = useState('')
@@ -26,22 +35,119 @@ export default function Checkout({ navigation }) {
   const [userDeliveryAddress, setUserDeliveryAddress] = useState('')
   const [orderComment, setOrderComment] = useState('')
   const [paymentMethod, settPaymentMethod] = useState('cash')
+  const [orderedItems, setOrderedItems] = useState([])
 
-  const calcTotalCost = () => {
-    let tempCost = 0
+  function calculateCart() {
+    const cartItems = []
+    const tempOrderedItems = []
+
     shoppingCart.forEach((item) => {
       const cartCount = shoppingCart.reduce(
         (acc, cur) => (cur.id === item.id ? ++acc : acc),
         0,
       )
-      tempCost += cartCount * item.buyPrice.value
+      if (cartItems.includes(item.id) === false) {
+        cartItems.push(item.id)
+        tempOrderedItems.push(
+          `\n\n<b>${item.name}</b>\nNumber Ordered: ${cartCount}\nCost: ${
+            cartCount * numeral(item.salePrices[0].value / 100).format('0.00')
+          } UAH`,
+        )
+      }
     })
-    setTotalCartCost(tempCost)
+    setOrderedItems(tempOrderedItems)
   }
 
   useEffect(() => {
-    calcTotalCost()
+    setTotalCartCost(totalCost)
+    dispatch(clearOrderErrors())
+    calculateCart()
   }, [])
+
+  function resetUserData() {
+    setUserDeliveryAddress('')
+    setUserEmail('')
+    setUserPhoneNumber('')
+    setOrderComment('')
+    setUserName('')
+  }
+
+  useEffect(() => {
+    if (orderPlacementSuccess && !orderPlacementFailed) {
+      dropDownAlert.current.alertWithType(
+        'success',
+        'Order',
+        'Your Order was places successfuly',
+      )
+      dispatch(clearCart())
+      dispatch(clearOrderErrors())
+
+      resetUserData()
+    } else if (!orderPlacementSuccess && orderPlacementFailed) {
+      dropDownAlert.current.alertWithType(
+        'error',
+        'Order',
+        'We could not place your order. Pleasetry again',
+      )
+      dispatch(clearOrderErrors())
+    }
+  }, [orderPlacementSuccess, orderPlacementFailed])
+
+  function submitData() {
+    const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+    if (userName === '') {
+      dropDownAlert.current.alertWithType(
+        'error',
+        'Order',
+        'Please enter enter your name',
+      )
+    } else if (userEmail === '' || userEmail === null) {
+      dropDownAlert.current.alertWithType(
+        'error',
+        'Order',
+        'Please enter an email address',
+      )
+    } else if (!userEmail.match(regexEmail)) {
+      dropDownAlert.current.alertWithType(
+        'error',
+        'Order',
+        'Please enter a valid email address',
+      )
+    } else if (userPhoneNumber === '' || userPhoneNumber === null) {
+      dropDownAlert.current.alertWithType(
+        'error',
+        'Order',
+        'Please enter your phone number',
+      )
+    } else if (userDeliveryAddress === '' || userDeliveryAddress === null) {
+      dropDownAlert.current.alertWithType(
+        'error',
+        'Order',
+        'Please enter your delivery address',
+      )
+    } else if (phoneInput.current.isValidNumber(userPhoneNumber) === false) {
+      dropDownAlert.current.alertWithType(
+        'error',
+        'Order',
+        'Please enter a valid phone number',
+      )
+    } else {
+      dispatch(
+        sendDataToBot({
+          userDetails: {
+            userName,
+            userEmail,
+            userPhoneNumber,
+            userDeliveryAddress,
+            orderComment,
+            paymentMethod,
+          },
+          data: orderedItems,
+        }),
+      )
+    }
+  }
+
   return (
     <View>
       <Header
@@ -70,7 +176,7 @@ export default function Checkout({ navigation }) {
           marginTop: height(2),
         }}
       >
-        Total: {numberFormatter(totalCartCost, 3, true)} ₴
+        Total: {totalCartCost} ₴
       </Text>
       <ScrollView
         style={{
@@ -88,6 +194,7 @@ export default function Checkout({ navigation }) {
               borderWidth: 1,
               borderColor: colors.pink,
               paddingHorizontal: width(1.6),
+              backgroundColor: colors.white,
             }}
             value={userName}
           />
@@ -111,6 +218,7 @@ export default function Checkout({ navigation }) {
                 width: '100%',
                 borderColor: colors.pink,
                 borderWidth: 1,
+                backgroundColor: colors.white,
               }}
             />
           </View>
@@ -128,6 +236,7 @@ export default function Checkout({ navigation }) {
               borderWidth: 1,
               borderColor: colors.pink,
               paddingHorizontal: width(1.6),
+              backgroundColor: colors.white,
             }}
             value={userEmail}
             keyboardType="email-address"
@@ -147,6 +256,7 @@ export default function Checkout({ navigation }) {
               borderWidth: 1,
               borderColor: colors.pink,
               paddingHorizontal: width(1.6),
+              backgroundColor: colors.white,
             }}
             value={userDeliveryAddress}
           />
@@ -166,6 +276,7 @@ export default function Checkout({ navigation }) {
               borderColor: colors.pink,
               paddingHorizontal: width(1.6),
               height: height(10),
+              backgroundColor: colors.white,
             }}
             value={orderComment}
             multiline
@@ -283,11 +394,14 @@ export default function Checkout({ navigation }) {
                 fontSize: fontSizes.big,
               }}
               title="SUBMIT"
-              onPress={() => {}}
+              onPress={() => {
+                submitData()
+              }}
             />
           </View>
         </View>
       </ScrollView>
+      <DropdownAlert ref={dropDownAlert} />
     </View>
   )
 }

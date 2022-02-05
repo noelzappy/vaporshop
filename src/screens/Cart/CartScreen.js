@@ -4,7 +4,7 @@ import { Button, Header } from 'react-native-elements'
 import { useDispatch, useSelector } from 'react-redux'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import FontIcon from 'react-native-vector-icons/FontAwesome5'
-import _ from 'lodash'
+import numeral from 'numeral'
 import { colors, fontSizes } from 'theme'
 import { height, width } from 'react-native-dimension'
 import { clearCart, numberFormatter } from '../../utils/Actions'
@@ -16,25 +16,18 @@ export default function CartScreen({ navigation }) {
 
   const [totalCartCost, setTotalCartCost] = useState(0)
   let cartItems = []
+  const eachItemCost = []
 
   const calcTotalCost = () => {
     let tempCost = 0
-    shoppingCart.forEach((item) => {
-      const cartCount = shoppingCart.reduce(
-        (acc, cur) => (cur.id === item.id ? ++acc : acc),
-        0,
-      )
-      tempCost += cartCount * item.buyPrice.value
-    })
+    eachItemCost.forEach((cost) => (tempCost += cost))
+    // console.log(tempCost)
     setTotalCartCost(tempCost)
   }
 
   useEffect(() => {
-    calcTotalCost()
-  }, [])
-
-  useEffect(() => {
     cartItems = []
+    calcTotalCost()
   }, [shoppingCart])
 
   return (
@@ -102,6 +95,12 @@ export default function CartScreen({ navigation }) {
 
           if (cartItems.includes(item.id) === false) {
             cartItems.push(item.id)
+
+            eachItemCost.push(
+              cartCount *
+                numeral(item.salePrices[0].value / 100).format('0.00'),
+            )
+
             return (
               <View
                 style={{
@@ -133,7 +132,12 @@ export default function CartScreen({ navigation }) {
                     marginRight: width(3),
                   }}
                 >
-                  {cartCount} X {numberFormatter(item.buyPrice.value, 2, true)}
+                  {cartCount} X{' '}
+                  {numberFormatter(
+                    numeral(item.salePrices[0].value / 100).format('0.00'),
+                    2,
+                    true,
+                  )}
                 </Text>
                 <Text
                   style={{
@@ -142,7 +146,9 @@ export default function CartScreen({ navigation }) {
                     fontWeight: 'bold',
                   }}
                 >
-                  {numberFormatter(cartCount * item.buyPrice.value)} ₴
+                  {cartCount *
+                    numeral(item.salePrices[0].value / 100).format('0.00')}{' '}
+                  ₴
                 </Text>
               </View>
             )
@@ -167,7 +173,7 @@ export default function CartScreen({ navigation }) {
                   textAlign: 'center',
                 }}
               >
-                Total: {numberFormatter(totalCartCost, 3, true)} ₴
+                Total: {totalCartCost} ₴
               </Text>
 
               <View
@@ -189,7 +195,11 @@ export default function CartScreen({ navigation }) {
                     fontSize: fontSizes.big,
                   }}
                   title="Checkout"
-                  onPress={() => navigation.navigate('CheckoutScreen')}
+                  onPress={() =>
+                    navigation.navigate('CheckoutScreen', {
+                      totalCost: totalCartCost,
+                    })
+                  }
                   disabled={shoppingCart.length <= 0}
                 />
               </View>
