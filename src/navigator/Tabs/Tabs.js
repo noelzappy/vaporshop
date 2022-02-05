@@ -53,15 +53,13 @@ const TabNavigator = () => {
           }
         },
         headerShown: false,
-      })}
-      tabBarOptions={{
-        activeTintColor: colors.black,
-        inactiveTintColor: colors.gray,
-        labelStyle: {
+        keyboardHidesTabBar: true,
+        tabBarActiveTintColor: colors.black,
+        tabBarInactiveTintColor: colors.gray,
+        tabBarLabelStyle: {
           display: 'none',
         },
-        keyboardHidesTabBar: true,
-      }}
+      })}
       initialRouteName="HomeScreen"
       swipeEnabled={false}
     >

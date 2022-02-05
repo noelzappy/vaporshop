@@ -47,3 +47,8 @@ const App = () => {
 }
 
 export default App
+
+//  "@react-navigation/bottom-tabs": "^5.11.2",
+//   "@react-navigation/drawer": "^5.11.4",
+//   "@react-navigation/native": "^5.8.10",
+//   "@react-navigation/stack": "^5.12.8",

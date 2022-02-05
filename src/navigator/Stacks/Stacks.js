@@ -1,5 +1,5 @@
 import React from 'react'
-import { createStackNavigator } from '@react-navigation/stack'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { colors } from 'theme'
 import TabNavigator from '../Tabs/Tabs'
 import Products from '../../screens/Products/Products'
@@ -9,7 +9,7 @@ import Checkout from '../../screens/Checkout/Checkout'
 // Constants
 // ------------------------------------
 
-const Stack = createStackNavigator()
+const Stack = createNativeStackNavigator()
 
 const navigationProps = {
   headerTintColor: colors.black,
@@ -24,7 +24,7 @@ const navigationProps = {
 
 const HomeNavigator = () => (
   <Stack.Navigator
-    initialRouteName="Home"
+    initialRouteName="MainScreen"
     headerMode="screen"
     screenOptions={navigationProps}
   >

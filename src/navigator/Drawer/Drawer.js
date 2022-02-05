@@ -2,28 +2,30 @@ import React from 'react'
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
-  DrawerItemList,
+  DrawerItem,
 } from '@react-navigation/drawer'
 import HomeNavigator from '../Stacks'
 
-import DrawerMenu from './DrawerMenu'
+// import DrawerMenu from './DrawerMenu'
 
 const Drawer = createDrawerNavigator()
 
 const DrawerMenuContainer = (props) => {
-  const { state, ...rest } = props
-  const newState = { ...state }
-  newState.routes = newState.routes.filter((item) => item.name !== 'Home')
   return (
     <DrawerContentScrollView {...props}>
-      <DrawerMenu {...props} />
-      <DrawerItemList state={newState} {...rest} />
+      {/* <DrawerItem label="Hello" /> */}
     </DrawerContentScrollView>
   )
 }
 
 export default () => (
-  <Drawer.Navigator initialRouteName="Home" drawerContent={DrawerMenuContainer}>
-    <Drawer.Screen name="Home" component={HomeNavigator} />
+  <Drawer.Navigator
+    initialRouteName="HomeDrawer"
+    drawerContent={DrawerMenuContainer}
+    screenOptions={{
+      headerShown: false,
+    }}
+  >
+    <Drawer.Screen name="HomeDrawer" component={HomeNavigator} />
   </Drawer.Navigator>
 )

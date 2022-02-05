@@ -29,7 +29,7 @@ export default function ProductItem({ item, shoppingCart }) {
         overflow: 'hidden',
         display: 'flex',
       }}
-      key={item.id}
+      key={item?.id}
     >
       <View
         style={{
@@ -46,7 +46,7 @@ export default function ProductItem({ item, shoppingCart }) {
           }}
           numberOfLines={2}
         >
-          {item.name}
+          {item?.name}
         </Text>
         <View>
           <Text
@@ -57,7 +57,7 @@ export default function ProductItem({ item, shoppingCart }) {
             }}
             numberOfLines={2}
           >
-            {item.pathName}
+            {item?.pathName}
           </Text>
         </View>
         <View
@@ -80,7 +80,7 @@ export default function ProductItem({ item, shoppingCart }) {
                 color: colors.black,
               }}
             >
-              {item.salePrices[0].value} ₴
+              {item?.salePrices[0].value} ₴
             </Text>
           </View>
           <View
@@ -125,7 +125,7 @@ export default function ProductItem({ item, shoppingCart }) {
             borderRadius: width(2),
           }}
           source={{
-            uri: item.images.meta.href,
+            uri: item?.images.meta.href,
             method: 'GET',
             headers,
           }}
