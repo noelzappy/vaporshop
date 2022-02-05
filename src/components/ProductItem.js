@@ -4,6 +4,7 @@ import { AntDesign } from '@expo/vector-icons'
 import { useDispatch } from 'react-redux'
 import { colors, fontSizes } from 'theme'
 import { height, width } from 'react-native-dimension'
+import numeral from 'numeral'
 import { addToCart, headers, removeFromCart } from '../utils/Actions'
 
 export default function ProductItem({ item, shoppingCart }) {
@@ -80,7 +81,7 @@ export default function ProductItem({ item, shoppingCart }) {
                 color: colors.black,
               }}
             >
-              {item?.salePrices[0].value} ₴
+              {numeral(item?.salePrices[0].value / 100).format('0.00')}₴
             </Text>
           </View>
           <View

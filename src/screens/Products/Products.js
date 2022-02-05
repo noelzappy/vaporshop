@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { colors, fontSizes, images } from 'theme'
 import { height, width } from 'react-native-dimension'
 import fuzzysort from 'fuzzysort'
+import SkeletonLoader from 'expo-skeleton-loader'
 import DropdownAlert from 'react-native-dropdownalert'
 import { Header, Input } from 'react-native-elements'
 import ProductItem from '../../components/ProductItem'
@@ -52,7 +53,7 @@ export default function Products({ navigation, route }) {
       folderFilteredProducts !== null
     ) {
       // console.log(folderFilteredProducts)
-      // setIsLoaded(true)
+      setIsLoaded(true)
     } else if (folderFilteredProductsFailed && !folderFilteredProductsSuccess) {
       setIsLoaded(false)
       dropDownAlert.current.alertWithType(
@@ -205,7 +206,72 @@ export default function Products({ navigation, route }) {
             </>
           )}
         </>
-      ) : null}
+      ) : (
+        <View
+          style={{
+            marginHorizontal: width(2),
+          }}
+        >
+          <SkeletonLoader
+            style={{ marginVertical: 10 }}
+            boneColor="dimgray"
+            highlightColor="darkgray"
+            duration={1500}
+          >
+            <SkeletonLoader.Item
+              style={{
+                width: '100%',
+                height: height(15),
+                marginVertical: 10,
+                borderRadius: width(5),
+              }}
+              // boneColor={colors.gray
+              // highlightColor="white"
+            />
+
+            <SkeletonLoader.Item
+              style={{
+                width: '100%',
+                height: height(15),
+                marginVertical: 10,
+                borderRadius: width(5),
+              }}
+              // boneColor={colors.gray
+              // highlightColor="white"
+            />
+            <SkeletonLoader.Item
+              style={{
+                width: '100%',
+                height: height(15),
+                marginVertical: 10,
+                borderRadius: width(5),
+              }}
+              // boneColor={colors.gray
+              // highlightColor="white"
+            />
+            <SkeletonLoader.Item
+              style={{
+                width: '100%',
+                height: height(15),
+                marginVertical: 10,
+                borderRadius: width(5),
+              }}
+              // boneColor={colors.gray
+              // highlightColor="white"
+            />
+            <SkeletonLoader.Item
+              style={{
+                width: '100%',
+                height: height(15),
+                marginVertical: 10,
+                borderRadius: width(5),
+              }}
+              // boneColor={colors.gray
+              // highlightColor="white"
+            />
+          </SkeletonLoader>
+        </View>
+      )}
       <DropdownAlert ref={dropDownAlert} />
     </View>
   )
