@@ -16,12 +16,21 @@ export default function SearchScreen({ navigation }) {
   const [searchKeyWord, setSearchKeyword] = useState('')
   const [foundProducts, setFoundProducts] = useState([])
   const [localProducts, setLocalProducts] = useState(() => {
-    const prods = products.filter(
-      (obj) => obj.pathName === '01 Одноразові под системи',
-    )
+    const prods = products.filter((obj) => {
+      // console.log(obj.pathName.split('/', 1).join())
+      if (
+        obj.pathName === '01 Одноразові под системи' ||
+        obj.pathName.split('/', 1).join() === '01 Одноразові под системи'
+      ) {
+        return obj
+      }
+    })
     return prods
   })
 
+  useEffect(() => {
+    console.log(localProducts)
+  }, [])
   useEffect(() => {
     try {
       const foundArray = fuzzysort.go(searchKeyWord, localProducts, {
