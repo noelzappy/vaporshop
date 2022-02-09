@@ -195,11 +195,11 @@ export default function CartScreen({ navigation }) {
                     fontSize: fontSizes.big,
                   }}
                   title="Checkout"
-                  onPress={() =>
+                  onPress={() => {
                     navigation.navigate('CheckoutScreen', {
                       totalCost: totalCartCost,
                     })
-                  }
+                  }}
                   disabled={shoppingCart.length <= 0}
                 />
               </View>

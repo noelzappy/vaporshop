@@ -42,7 +42,8 @@ const INTIAL_STATE = {
 
 function appReducer(state = INTIAL_STATE, action) {
   switch (action.type) {
-    case GET_PRODUCTS_SUCCESS:
+    case GET_PRODUCTS_SUCCESS: {
+
       return {
         ...state,
         products: action.payload,
@@ -50,6 +51,7 @@ function appReducer(state = INTIAL_STATE, action) {
         getProductsSuccess: true,
         getProductsFailedError: null,
       }
+    }
     case GET_PRODUCTS_FAILED:
       return {
         ...state,

@@ -30,12 +30,17 @@ const baseURL = 'https://online.moysklad.ru/api/remap/1.2/entity'
 export const getProducts = () => (dispatch) => {
   axios
     .get(`${baseURL}/assortment`, { headers })
-    .then((res) =>
+    .then((res) => {
+      const { rows } = res.data
+      const newVal = rows.filter(
+        (obj) => obj.pathName === '01 Одноразові под системи',
+      )
+
       dispatch({
         type: GET_PRODUCTS_SUCCESS,
-        payload: res.data.rows,
-      }),
-    )
+        payload: newVal,
+      })
+    })
     .catch((err) => {
       // console.log(err.response.data)
       dispatch({
@@ -45,15 +50,18 @@ export const getProducts = () => (dispatch) => {
     })
 }
 
-export const getProductsFilteredByFolder = (folderURL) => (dispatch) => {
+export const getProductsFilteredByFolder = (filterObject) => (dispatch) => {
   axios
-    .get(`${baseURL}/assortment?filter=productFolder=${folderURL}`, { headers })
-    .then((res) =>
+    .get(`${baseURL}/assortment`, { headers })
+    .then((res) => {
+      const { rows } = res.data
+      const newVal = rows.filter((obj) => obj.pathName === filterObject)
+
       dispatch({
         type: GET_FOLDER_FILTERED_PRODUCTS_SUCCESS,
-        payload: res.data.rows,
-      }),
-    )
+        payload: newVal,
+      })
+    })
     .catch((err) => {
       // console.log(err.response.data)
       dispatch({
@@ -72,12 +80,17 @@ export const clearFilterErrors = () => (dispatch) => {
 export const getCategories = () => (dispatch) => {
   axios
     .get(`${baseURL}/productfolder`, { headers })
-    .then((res) =>
+    .then((res) => {
+      const { rows } = res.data
+      const newVal = rows.filter(
+        (obj) => obj.pathName === '01 Одноразові под системи',
+      )
+
       dispatch({
         type: GET_CATEGORIES_SUCCESS,
-        payload: res.data.rows,
-      }),
-    )
+        payload: newVal,
+      })
+    })
     .catch((err) => {
       // console.log(err.response.data)
 

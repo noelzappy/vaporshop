@@ -33,11 +33,8 @@ export default function Products({ navigation, route }) {
   const [isLoaded, setIsLoaded] = useState(false)
 
   function fetchFilteredItems(cat) {
-    if (cat.productFolder) {
-      dispatch(getProductsFilteredByFolder(cat.productFolder.meta.href))
-    } else {
-      dispatch(getProductsFilteredByFolder(cat.meta.href))
-    }
+    const filtObj = `${cat.pathName}/${cat.name}`
+    dispatch(getProductsFilteredByFolder(filtObj))
   }
   // Fetch prducts
   useEffect(() => {
@@ -221,54 +218,277 @@ export default function Products({ navigation, route }) {
             <SkeletonLoader.Item
               style={{
                 width: '100%',
-                height: height(15),
+                height: height(5),
                 marginVertical: 10,
-                borderRadius: width(5),
+                borderRadius: width(1),
               }}
               // boneColor={colors.gray
               // highlightColor="white"
             />
 
-            <SkeletonLoader.Item
+            <SkeletonLoader.Container
               style={{
-                width: '100%',
-                height: height(15),
-                marginVertical: 10,
-                borderRadius: width(5),
+                paddingVertical: 10,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
               }}
-              // boneColor={colors.gray
-              // highlightColor="white"
-            />
-            <SkeletonLoader.Item
+            >
+              <SkeletonLoader.Container>
+                <SkeletonLoader.Item
+                  style={{ width: width(45), height: 20, marginBottom: 5 }}
+                />
+                <SkeletonLoader.Item style={{ width: width(20), height: 20 }} />
+                <SkeletonLoader.Container
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginTop: height(2),
+                  }}
+                >
+                  <SkeletonLoader.Item
+                    style={{ width: width(15), height: 20 }}
+                  />
+                  <SkeletonLoader.Container
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <SkeletonLoader.Item
+                      style={{
+                        width: width(3),
+                        height: 20,
+
+                        borderRadius: width(10),
+                      }}
+                    />
+                    <SkeletonLoader.Item
+                      style={{
+                        width: width(3),
+                        height: 20,
+
+                        marginLeft: 5,
+                        borderRadius: width(10),
+                      }}
+                    />
+                  </SkeletonLoader.Container>
+                </SkeletonLoader.Container>
+              </SkeletonLoader.Container>
+
+              <SkeletonLoader.Container>
+                <SkeletonLoader.Item
+                  style={{
+                    width: width(40),
+                    height: height(15),
+                    marginVertical: 10,
+                    borderRadius: width(5),
+                  }}
+                  // boneColor={colors.gray
+                  // highlightColor="white"
+                />
+              </SkeletonLoader.Container>
+            </SkeletonLoader.Container>
+
+            <SkeletonLoader.Container
               style={{
-                width: '100%',
-                height: height(15),
-                marginVertical: 10,
-                borderRadius: width(5),
+                paddingVertical: 10,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
               }}
-              // boneColor={colors.gray
-              // highlightColor="white"
-            />
-            <SkeletonLoader.Item
+            >
+              <SkeletonLoader.Container>
+                <SkeletonLoader.Item
+                  style={{ width: width(45), height: 20, marginBottom: 5 }}
+                />
+                <SkeletonLoader.Item style={{ width: width(20), height: 20 }} />
+                <SkeletonLoader.Container
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginTop: height(2),
+                  }}
+                >
+                  <SkeletonLoader.Item
+                    style={{ width: width(15), height: 20 }}
+                  />
+                  <SkeletonLoader.Container
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <SkeletonLoader.Item
+                      style={{
+                        width: width(3),
+                        height: 20,
+
+                        borderRadius: width(10),
+                      }}
+                    />
+                    <SkeletonLoader.Item
+                      style={{
+                        width: width(3),
+                        height: 20,
+
+                        marginLeft: 5,
+                        borderRadius: width(10),
+                      }}
+                    />
+                  </SkeletonLoader.Container>
+                </SkeletonLoader.Container>
+              </SkeletonLoader.Container>
+
+              <SkeletonLoader.Container>
+                <SkeletonLoader.Item
+                  style={{
+                    width: width(40),
+                    height: height(15),
+                    marginVertical: 10,
+                    borderRadius: width(5),
+                  }}
+                  // boneColor={colors.gray
+                  // highlightColor="white"
+                />
+              </SkeletonLoader.Container>
+            </SkeletonLoader.Container>
+
+            <SkeletonLoader.Container
               style={{
-                width: '100%',
-                height: height(15),
-                marginVertical: 10,
-                borderRadius: width(5),
+                paddingVertical: 10,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
               }}
-              // boneColor={colors.gray
-              // highlightColor="white"
-            />
-            <SkeletonLoader.Item
+            >
+              <SkeletonLoader.Container>
+                <SkeletonLoader.Item
+                  style={{ width: width(45), height: 20, marginBottom: 5 }}
+                />
+                <SkeletonLoader.Item style={{ width: width(20), height: 20 }} />
+                <SkeletonLoader.Container
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginTop: height(2),
+                  }}
+                >
+                  <SkeletonLoader.Item
+                    style={{ width: width(15), height: 20 }}
+                  />
+                  <SkeletonLoader.Container
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <SkeletonLoader.Item
+                      style={{
+                        width: width(3),
+                        height: 20,
+
+                        borderRadius: width(10),
+                      }}
+                    />
+                    <SkeletonLoader.Item
+                      style={{
+                        width: width(3),
+                        height: 20,
+
+                        marginLeft: 5,
+                        borderRadius: width(10),
+                      }}
+                    />
+                  </SkeletonLoader.Container>
+                </SkeletonLoader.Container>
+              </SkeletonLoader.Container>
+
+              <SkeletonLoader.Container>
+                <SkeletonLoader.Item
+                  style={{
+                    width: width(40),
+                    height: height(15),
+                    marginVertical: 10,
+                    borderRadius: width(5),
+                  }}
+                  // boneColor={colors.gray
+                  // highlightColor="white"
+                />
+              </SkeletonLoader.Container>
+            </SkeletonLoader.Container>
+
+            <SkeletonLoader.Container
               style={{
-                width: '100%',
-                height: height(15),
-                marginVertical: 10,
-                borderRadius: width(5),
+                paddingVertical: 10,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
               }}
-              // boneColor={colors.gray
-              // highlightColor="white"
-            />
+            >
+              <SkeletonLoader.Container>
+                <SkeletonLoader.Item
+                  style={{ width: width(45), height: 20, marginBottom: 5 }}
+                />
+                <SkeletonLoader.Item style={{ width: width(20), height: 20 }} />
+                <SkeletonLoader.Container
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginTop: height(2),
+                  }}
+                >
+                  <SkeletonLoader.Item
+                    style={{ width: width(15), height: 20 }}
+                  />
+                  <SkeletonLoader.Container
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <SkeletonLoader.Item
+                      style={{
+                        width: width(3),
+                        height: 20,
+
+                        borderRadius: width(10),
+                      }}
+                    />
+                    <SkeletonLoader.Item
+                      style={{
+                        width: width(3),
+                        height: 20,
+
+                        marginLeft: 5,
+                        borderRadius: width(10),
+                      }}
+                    />
+                  </SkeletonLoader.Container>
+                </SkeletonLoader.Container>
+              </SkeletonLoader.Container>
+
+              <SkeletonLoader.Container>
+                <SkeletonLoader.Item
+                  style={{
+                    width: width(40),
+                    height: height(15),
+                    marginVertical: 10,
+                    borderRadius: width(5),
+                  }}
+                  // boneColor={colors.gray
+                  // highlightColor="white"
+                />
+              </SkeletonLoader.Container>
+            </SkeletonLoader.Container>
           </SkeletonLoader>
         </View>
       )}
