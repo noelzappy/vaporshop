@@ -62,7 +62,7 @@ export default function ProductItem({ item, shoppingCart }) {
               color: colors.black,
             }}
           >
-            {numeral(item?.salePrices[0].value / 100).format('0.00')} ₴ Lorem
+            {numeral(item?.salePrices[0].value / 100).format('0.00')} ₴
           </Text>
         </View>
         <View
