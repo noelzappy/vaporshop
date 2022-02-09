@@ -163,7 +163,7 @@ export default function Products({ navigation, route }) {
               </View>
             )}
           />
-          {folderFilteredProducts.length > 0 && (
+          {(folderFilteredProducts || folderFilteredProducts.length > 0) && (
             <>
               <TouchableOpacity
                 style={{
