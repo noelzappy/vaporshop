@@ -7,6 +7,7 @@ import FontIcon from 'react-native-vector-icons/FontAwesome5'
 import numeral from 'numeral'
 import { colors, fontSizes } from 'theme'
 import { height, width } from 'react-native-dimension'
+import _ from 'lodash'
 import { clearCart, numberFormatter, removeFromCart } from '../../utils/Actions'
 
 export default function CartScreen({ navigation }) {
@@ -16,14 +17,41 @@ export default function CartScreen({ navigation }) {
 
   const [totalCartCost, setTotalCartCost] = useState(0)
   let cartItems = []
-  const eachItemCost = []
+
+  const getPriceFromCart = (itemId) => {
+    let price = 0
+    shoppingCart.forEach((item) => {
+      if (item.id === itemId) {
+        price = numeral(item.salePrices[0].value / 100).format('0.00')
+      }
+    })
+
+    return price
+  }
+
+  const getNumberInCart = () => {
+    return shoppingCart.reduce((obj, b) => {
+      obj[b.id] = ++obj[b.id] || 1
+      return obj
+    }, {})
+  }
 
   const calcTotalCost = () => {
-    let tempCost = 0
-    eachItemCost.forEach((cost) => (tempCost += cost))
-    // console.log(tempCost)
-    setTotalCartCost(tempCost)
+    const inCart = getNumberInCart()
+    let tempTotal = 0
+    Object.entries(inCart).forEach((item) => {
+      const [key, value] = item
+      const unitPrice = getPriceFromCart(key)
+
+      tempTotal += unitPrice * value
+    })
+
+    setTotalCartCost(tempTotal)
   }
+
+  useEffect(() => {
+    calcTotalCost()
+  }, [])
 
   useEffect(() => {
     cartItems = []
@@ -96,13 +124,18 @@ export default function CartScreen({ navigation }) {
           if (cartItems.includes(item.id) === false) {
             cartItems.push(item.id)
 
-            eachItemCost.push(
-              cartCount *
-                numeral(item.salePrices[0].value / 100).format('0.00'),
-            )
+            // eachItemCost.push(
+            //   cartCount *
+            //     numeral(item.salePrices[0].value / 100).format('0.00'),
+            // )
 
             return (
-              <TouchableOpacity onPress={() => dispatch(removeFromCart(item))}>
+              <TouchableOpacity
+                onPress={() => {
+                  dispatch(removeFromCart(item))
+                  calcTotalCost()
+                }}
+              >
                 <View
                   style={{
                     flexDirection: 'row',

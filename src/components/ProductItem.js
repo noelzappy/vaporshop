@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 import { height, width } from 'react-native-dimension'
 import numeral from 'numeral'
 import { addToCart, headers, removeFromCart } from '../utils/Actions'
-import { colors, fontSizes } from '../theme'
+import { colors, fontSizes, images } from '../theme'
 
 export default function ProductItem({ item, shoppingCart }) {
   const dispatch = useDispatch()
@@ -29,6 +29,7 @@ export default function ProductItem({ item, shoppingCart }) {
         justifyContent: 'space-between',
         overflow: 'hidden',
         display: 'flex',
+        flex: 1,
       }}
       key={item?.id}
     >
@@ -49,23 +50,26 @@ export default function ProductItem({ item, shoppingCart }) {
         >
           {item?.name}
         </Text>
-        <View>
+        <View
+          style={{
+            marginTop: height(3),
+          }}
+        >
           <Text
             style={{
-              paddingTop: height(1),
+              fontSize: fontSizes.maxi,
+              fontWeight: 'bold',
               color: colors.black,
-              fontSize: fontSizes.normal,
             }}
-            numberOfLines={2}
           >
-            {item?.pathName}
+            {numeral(item?.salePrices[0].value / 100).format('0.00')} ₴ Lorem
           </Text>
         </View>
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            paddingTop: height(2),
+            // paddingTop: height(2),
             alignItems: 'center',
           }}
         >
@@ -76,19 +80,11 @@ export default function ProductItem({ item, shoppingCart }) {
           >
             <Text
               style={{
-                fontSize: fontSizes.maxi,
-                fontWeight: 'bold',
-                color: colors.black,
-              }}
-            >
-              {numeral(item?.salePrices[0].value / 100).format('0.00')} ₴
-            </Text>
-
-            <Text
-              style={{
-                color: item.quantity > 0 ? 'green' : 'red',
+                paddingTop: height(1),
                 fontSize: fontSizes.normal,
+                color: item.quantity > 0 ? 'green' : 'red',
               }}
+              numberOfLines={2}
             >
               {item.quantity > 0
                 ? `Наявність: ${item.quantity}`
@@ -107,7 +103,7 @@ export default function ProductItem({ item, shoppingCart }) {
               onPress={() => {
                 dispatch(addToCart(item))
               }}
-              disabled={item.quantity <= 0}
+              disabled={item.quantity <= 0 || cartCount === item.quantity}
             >
               <AntDesign name="pluscircle" size={24} color={colors.pink} />
             </TouchableOpacity>
@@ -132,16 +128,19 @@ export default function ProductItem({ item, shoppingCart }) {
       >
         <Image
           style={{
-            width: height(14),
-            height: height(12),
-            backgroundColor: colors.pink,
+            // width: height(12),
+            // height: height(10),
+            backgroundColor: colors.spGray,
             borderRadius: width(2),
+            // padding: height(2),
+            height: '100%',
           }}
-          source={{
-            uri: item?.images.meta.href,
-            method: 'GET',
-            headers,
-          }}
+          // source={{
+          //   uri: item?.images.meta.href,
+          //   method: 'GET',
+          //   headers,
+          // }}
+          source={images.demo}
         />
       </View>
     </View>

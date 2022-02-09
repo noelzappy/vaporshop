@@ -177,7 +177,6 @@ export default function Checkout({ navigation, route }) {
         style={{
           marginTop: height(2),
         }}
-        keyboardShouldPersistTaps
         keyboardDismissMode="onDrag"
       >
         <View>

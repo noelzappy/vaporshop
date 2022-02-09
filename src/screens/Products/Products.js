@@ -176,7 +176,7 @@ export default function Products({ navigation, route }) {
                   borderRadius: 30,
                   backgroundColor: colors.black,
                   position: 'absolute',
-                  bottom: height(20),
+                  bottom: height(5),
                   right: 10,
                   flexWrap: 'wrap',
                   justifyContent: 'center',

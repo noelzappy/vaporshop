@@ -6,7 +6,7 @@ import { colors, fontSizes, appStyles } from 'theme'
 import { Header, Input } from 'react-native-elements'
 import FontIcon from 'react-native-vector-icons/FontAwesome5'
 import { useDispatch, useSelector } from 'react-redux'
-import { height } from 'react-native-dimension'
+import { height, width } from 'react-native-dimension'
 import DropdownAlert from 'react-native-dropdownalert'
 import fuzzysort from 'fuzzysort'
 
@@ -101,6 +101,7 @@ const Home = ({ navigation }) => {
             style={{
               fontSize: fontSizes.maxi,
               fontWeight: 'bold',
+              paddingTop: width(2),
             }}
             numberOfLines={1}
           >

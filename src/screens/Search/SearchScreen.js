@@ -15,10 +15,16 @@ export default function SearchScreen({ navigation }) {
 
   const [searchKeyWord, setSearchKeyword] = useState('')
   const [foundProducts, setFoundProducts] = useState([])
+  const [localProducts, setLocalProducts] = useState(() => {
+    const prods = products.filter(
+      (obj) => obj.pathName === '01 Одноразові под системи',
+    )
+    return prods
+  })
 
   useEffect(() => {
     try {
-      const foundArray = fuzzysort.go(searchKeyWord, products.slice(0, 100), {
+      const foundArray = fuzzysort.go(searchKeyWord, localProducts, {
         key: 'name',
         limit: 100,
       })
@@ -35,7 +41,11 @@ export default function SearchScreen({ navigation }) {
   }, [searchKeyWord])
 
   return (
-    <View>
+    <View
+      style={{
+        marginBottom: height(15),
+      }}
+    >
       <Header
         leftComponent={() => (
           <TouchableOpacity
