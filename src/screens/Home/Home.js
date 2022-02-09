@@ -10,7 +10,11 @@ import { height } from 'react-native-dimension'
 import DropdownAlert from 'react-native-dropdownalert'
 import fuzzysort from 'fuzzysort'
 
-import { clearCategoryErrors, clearFilteredProducts } from '../../utils/Actions'
+import {
+  clearCategoryErrors,
+  clearFilteredProducts,
+  getProducts,
+} from '../../utils/Actions'
 
 const Home = ({ navigation }) => {
   const dispatch = useDispatch()
@@ -21,7 +25,6 @@ const Home = ({ navigation }) => {
     getCategoriesFailedError,
     getCategoriesFailed,
     getCategoriesSuccess,
-
     folderFilteredProducts,
   } = app
 
@@ -29,6 +32,7 @@ const Home = ({ navigation }) => {
   const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
+    dispatch(getProducts())
     dispatch(clearFilteredProducts())
   }, [])
 

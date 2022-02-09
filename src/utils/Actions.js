@@ -31,14 +31,9 @@ export const getProducts = () => (dispatch) => {
   axios
     .get(`${baseURL}/assortment`, { headers })
     .then((res) => {
-      const { rows } = res.data
-      const newVal = rows.filter(
-        (obj) => obj.pathName === '01 Одноразові под системи',
-      )
-
       dispatch({
         type: GET_PRODUCTS_SUCCESS,
-        payload: newVal,
+        payload: res.data.rows,
       })
     })
     .catch((err) => {
@@ -50,26 +45,26 @@ export const getProducts = () => (dispatch) => {
     })
 }
 
-export const getProductsFilteredByFolder = (filterObject) => (dispatch) => {
-  axios
-    .get(`${baseURL}/assortment`, { headers })
-    .then((res) => {
-      const { rows } = res.data
-      const newVal = rows.filter((obj) => obj.pathName === filterObject)
+export const getProductsFilteredByFolder =
+  (filterObject) => (dispatch, getState) => {
+    const { app } = getState()
+    const { products } = app
+
+    if (products) {
+      const newVal = products.filter((obj) => obj.pathName === filterObject)
 
       dispatch({
         type: GET_FOLDER_FILTERED_PRODUCTS_SUCCESS,
         payload: newVal,
       })
-    })
-    .catch((err) => {
+    } else {
       // console.log(err.response.data)
       dispatch({
         type: GET_FOLDER_FILTERED_PRODUCTS_FAILED,
         payload: 'Error fetching products. Please check your internet',
       })
-    })
-}
+    }
+  }
 
 export const clearFilterErrors = () => (dispatch) => {
   dispatch({

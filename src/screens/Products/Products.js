@@ -93,7 +93,11 @@ export default function Products({ navigation, route }) {
   }, [searchTerm])
 
   return (
-    <View>
+    <View
+      style={{
+        marginBottom: height(15),
+      }}
+    >
       <Header
         leftComponent={() => (
           <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -107,7 +111,7 @@ export default function Products({ navigation, route }) {
               fontWeight: 'bold',
             }}
           >
-            Products
+            {category.name}
           </Text>
         )}
         backgroundColor={colors.white}
@@ -163,7 +167,7 @@ export default function Products({ navigation, route }) {
               </View>
             )}
           />
-          {(folderFilteredProducts || folderFilteredProducts.length > 0) && (
+          {folderFilteredProducts && folderFilteredProducts.length > 0 && (
             <>
               <TouchableOpacity
                 style={{
