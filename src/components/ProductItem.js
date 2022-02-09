@@ -2,10 +2,10 @@ import React from 'react'
 import { View, Text, Image, TouchableOpacity } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { useDispatch } from 'react-redux'
-import { colors, fontSizes } from 'theme'
 import { height, width } from 'react-native-dimension'
 import numeral from 'numeral'
 import { addToCart, headers, removeFromCart } from '../utils/Actions'
+import { colors, fontSizes } from '../theme'
 
 export default function ProductItem({ item, shoppingCart }) {
   const dispatch = useDispatch()
@@ -83,6 +83,17 @@ export default function ProductItem({ item, shoppingCart }) {
             >
               {numeral(item?.salePrices[0].value / 100).format('0.00')} ₴
             </Text>
+
+            <Text
+              style={{
+                color: item.quantity > 0 ? 'green' : 'red',
+                fontSize: fontSizes.normal,
+              }}
+            >
+              {item.quantity > 0
+                ? `Наявність: ${item.quantity}`
+                : 'Немає в наявості'}
+            </Text>
           </View>
           <View
             style={{
@@ -96,6 +107,7 @@ export default function ProductItem({ item, shoppingCart }) {
               onPress={() => {
                 dispatch(addToCart(item))
               }}
+              disabled={item.quantity <= 0}
             >
               <AntDesign name="pluscircle" size={24} color={colors.pink} />
             </TouchableOpacity>

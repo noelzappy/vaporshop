@@ -13,12 +13,7 @@ import DropdownAlert from 'react-native-dropdownalert'
 import numeral from 'numeral'
 import { useDispatch, useSelector } from 'react-redux'
 import { width, height } from 'react-native-dimension'
-import {
-  numberFormatter,
-  sendDataToBot,
-  clearOrderErrors,
-  clearCart,
-} from '../../utils/Actions'
+import { sendDataToBot, clearOrderErrors, clearCart } from '../../utils/Actions'
 
 export default function Checkout({ navigation, route }) {
   const dispatch = useDispatch()
@@ -182,6 +177,8 @@ export default function Checkout({ navigation, route }) {
         style={{
           marginTop: height(2),
         }}
+        keyboardShouldPersistTaps
+        keyboardDismissMode="onDrag"
       >
         <View>
           <Input

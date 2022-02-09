@@ -7,7 +7,7 @@ import FontIcon from 'react-native-vector-icons/FontAwesome5'
 import numeral from 'numeral'
 import { colors, fontSizes } from 'theme'
 import { height, width } from 'react-native-dimension'
-import { clearCart, numberFormatter } from '../../utils/Actions'
+import { clearCart, numberFormatter, removeFromCart } from '../../utils/Actions'
 
 export default function CartScreen({ navigation }) {
   const dispatch = useDispatch()
@@ -102,55 +102,60 @@ export default function CartScreen({ navigation }) {
             )
 
             return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  marginVertical: width(2),
-                  marginHorizontal: width(2),
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  alignContent: 'center',
-                  borderBottomColor: colors.pink,
-                  borderBottomWidth: 2,
-                  paddingBottom: width(1),
-                }}
-                key={item.id}
-              >
-                <Text
+              <TouchableOpacity onPress={() => dispatch(removeFromCart(item))}>
+                <View
                   style={{
-                    width: '50%',
-                    fontSize: fontSizes.maxi,
-                    marginRight: width(3),
+                    flexDirection: 'row',
+                    marginVertical: width(2),
+                    marginHorizontal: width(2),
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    alignContent: 'center',
+                    borderBottomColor: colors.pink,
+                    borderBottomWidth: 2,
+                    paddingBottom: width(1),
+                    marginTop: height(2),
                   }}
-                  numberOfLines={1}
+                  key={item.id}
                 >
-                  {item.name}
-                </Text>
-                <Text
-                  style={{
-                    fontSize: fontSizes.maxi,
-                    marginRight: width(3),
-                  }}
-                >
-                  {cartCount} X{' '}
-                  {numberFormatter(
-                    numeral(item.salePrices[0].value / 100).format('0.00'),
-                    2,
-                    true,
-                  )}
-                </Text>
-                <Text
-                  style={{
-                    fontSize: fontSizes.maxi,
-                    marginRight: width(3),
-                    fontWeight: 'bold',
-                  }}
-                >
-                  {cartCount *
-                    numeral(item.salePrices[0].value / 100).format('0.00')}{' '}
-                  ₴
-                </Text>
-              </View>
+                  <Text
+                    style={{
+                      width: '50%',
+                      fontSize: fontSizes.maxi,
+                      marginRight: width(3),
+                    }}
+                    numberOfLines={1}
+                  >
+                    {item.name}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: fontSizes.maxi,
+                      marginRight: width(3),
+                    }}
+                  >
+                    {cartCount} X{' '}
+                    {numberFormatter(
+                      numeral(item.salePrices[0].value / 100).format('0.00'),
+                      2,
+                      true,
+                    )}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: fontSizes.maxi,
+                      marginRight: width(3),
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {cartCount *
+                      numeral(item.salePrices[0].value / 100).format(
+                        '0.00',
+                      )}{' '}
+                    ₴
+                  </Text>
+                </View>
+              </TouchableOpacity>
             )
           }
         }}

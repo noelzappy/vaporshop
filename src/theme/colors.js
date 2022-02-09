@@ -8,6 +8,7 @@ const colors = {
   black: '#000',
   white: '#fff',
   appGray: 'rgb(105,105,105)',
+  spGray: '#e9ecef',
 }
 
 export default colors

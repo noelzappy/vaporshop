@@ -96,6 +96,17 @@ const Home = ({ navigation }) => {
           // marginTop: 0,
         }}
         backgroundColor={colors.white}
+        centerComponent={() => (
+          <Text
+            style={{
+              fontSize: fontSizes.maxi,
+              fontWeight: 'bold',
+            }}
+            numberOfLines={1}
+          >
+            Одноразові под системи
+          </Text>
+        )}
       />
 
       <Input
