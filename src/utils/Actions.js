@@ -18,6 +18,9 @@ export const CLEAR_FILTERED_PRODUCTS = 'CLEAR_FILTERED_PRODUCTS'
 export const ORDER_PLACED_SUCCESS = 'ORDER_PLACED_SUCCESS'
 export const ORDER_PLACED_FAILED = 'ORDER_PLACED_FAILED'
 export const CLEAR_PLACE_ORDER_ERROR = 'CLEAR_PLACE_ORDER_ERROR'
+export const GET_WAREHOUSE_SUCCESS = 'GET_WAREHOUSE_SUCCESS'
+export const GET_WAREHOUSE_FAILED = 'GET_WAREHOUSE_FAILED'
+export const CLEAR_WAREHOUSE_ERROR = 'CLEAR_WAREHOUSE_ERROR'
 
 export const APP_TOKEN = 'YWRtaW5AdmFwb3Jzc3VwMjpBbnRvbmJiMQ'
 export const TELEGRAM_TOKEN = '5186679461:AAFJo2Mz001hRuATFfKHu0UJ3clSQKmHjwI'
@@ -206,5 +209,38 @@ export function clearOrderErrors() {
   return (dispatch) =>
     dispatch({
       type: CLEAR_PLACE_ORDER_ERROR,
+    })
+}
+
+export function getWarehouse() {
+  return (dispatch) =>
+    axios
+      .get(`${baseURL}/store`, { headers })
+      .then((res) => {
+        const { rows } = res.data
+        const newVal = rows.filter((obj) => {
+          if (obj.name === 'Vapors Чорновола' || obj.name === 'Street Vapors') {
+            return obj
+          }
+        })
+
+        dispatch({
+          type: GET_WAREHOUSE_SUCCESS,
+          payload: newVal,
+        })
+      })
+      .catch((err) => {
+        // console.log(err.response.data)
+        dispatch({
+          type: GET_CATEGORIES_FAILED,
+          payload: 'Error fetching store data. Please check your internet',
+        })
+      })
+}
+
+export function clearWareHouseError() {
+  return (dispatch) =>
+    dispatch({
+      type: CLEAR_WAREHOUSE_ERROR,
     })
 }

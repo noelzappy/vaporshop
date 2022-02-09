@@ -1,19 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { MaterialIcons } from '@expo/vector-icons'
+import { AntDesign, MaterialIcons, Ionicons } from '@expo/vector-icons'
 import PropTypes from 'prop-types'
 import { Text, View, StatusBar, TouchableOpacity, FlatList } from 'react-native'
-import { colors, fontSizes, appStyles } from 'theme'
 import { Header, Input } from 'react-native-elements'
 import FontIcon from 'react-native-vector-icons/FontAwesome5'
 import { useDispatch, useSelector } from 'react-redux'
 import { height, width } from 'react-native-dimension'
 import DropdownAlert from 'react-native-dropdownalert'
 import fuzzysort from 'fuzzysort'
+import Modal from 'react-native-modal'
+import { colors, fontSizes, appStyles } from '../../theme'
 
 import {
   clearCategoryErrors,
   clearFilteredProducts,
   getProducts,
+  getWarehouse,
 } from '../../utils/Actions'
 
 const Home = ({ navigation }) => {
@@ -26,14 +28,22 @@ const Home = ({ navigation }) => {
     getCategoriesFailed,
     getCategoriesSuccess,
     folderFilteredProducts,
+
+    wareHouses,
+    getWareHousesError,
+    getWareHouseFail,
+    getWareHouseSuccess,
   } = app
 
   const [searchResult, setSearchResult] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
+  const [showCityModal, setShowCityModal] = useState(false)
 
   useEffect(() => {
     dispatch(getProducts())
+    dispatch(getWarehouse())
     dispatch(clearFilteredProducts())
+    console.log(wareHouses)
   }, [])
 
   useEffect(() => {
@@ -77,14 +87,14 @@ const Home = ({ navigation }) => {
   return (
     <>
       <Header
-        leftComponent={() => (
+        rightComponent={() => (
           <TouchableOpacity
             onPress={() => {
-              navigation.openDrawer()
+              setShowCityModal(true)
             }}
           >
-            <FontIcon
-              name="indent"
+            <Ionicons
+              name="location"
               color={colors.black}
               size={height(4)}
               solid
@@ -108,7 +118,111 @@ const Home = ({ navigation }) => {
             Одноразові под системи
           </Text>
         )}
+        leftComponent={() => (
+          <TouchableOpacity
+            onPress={() => {
+              navigation.openDrawer()
+            }}
+          >
+            <FontIcon
+              name="indent"
+              color={colors.black}
+              size={height(4)}
+              solid
+            />
+          </TouchableOpacity>
+        )}
       />
+
+      <Modal isVisible={showCityModal}>
+        <View
+          style={{
+            backgroundColor: colors.white,
+            paddingVertical: height(2),
+            borderRadius: width(2),
+            paddingHorizontal: width(3),
+          }}
+        >
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              borderBottomColor: colors.pink,
+              borderBottomWidth: 2,
+              paddingBottom: height(1),
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => setShowCityModal(false)}
+              style={{
+                padding: height(1),
+                backgroundColor: colors.spGray,
+                borderRadius: width(12),
+              }}
+            >
+              <AntDesign name="close" size={23} color={colors.pink} />
+            </TouchableOpacity>
+
+            <View
+              style={{
+                width: '100%',
+                alignItems: 'center',
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: fontSizes.big,
+                }}
+              >
+                Виберіть магазин
+              </Text>
+            </View>
+          </View>
+
+          <View>
+            <TouchableOpacity
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginHorizontal: width(3),
+                marginVertical: height(2),
+                backgroundColor: colors.pink,
+                padding: height(1.6),
+                borderRadius: width(2),
+              }}
+            >
+              <Text
+                style={{
+                  color: colors.white,
+                  fontSize: fontSizes.maxi,
+                }}
+              >
+                Вул. торгова 15
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginHorizontal: width(3),
+                marginVertical: height(2),
+                backgroundColor: colors.pink,
+                padding: height(1.6),
+                borderRadius: width(2),
+              }}
+            >
+              <Text
+                style={{
+                  color: colors.white,
+                  fontSize: fontSizes.maxi,
+                }}
+              >
+                Пр. Чорновола 4
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       <Input
         placeholder="Search.."

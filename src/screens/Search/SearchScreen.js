@@ -29,9 +29,6 @@ export default function SearchScreen({ navigation }) {
   })
 
   useEffect(() => {
-    console.log(localProducts)
-  }, [])
-  useEffect(() => {
     try {
       const foundArray = fuzzysort.go(searchKeyWord, localProducts, {
         key: 'name',

@@ -4,6 +4,7 @@ import { colors } from 'theme'
 import TabNavigator from '../Tabs/Tabs'
 import Products from '../../screens/Products/Products'
 import Checkout from '../../screens/Checkout/Checkout'
+// import MainScreen from '../../Main/MainScreen'
 
 // ------------------------------------
 // Constants
@@ -24,10 +25,11 @@ const navigationProps = {
 
 const HomeNavigator = () => (
   <Stack.Navigator
-    initialRouteName="MainScreen"
+    initialRouteName="Home"
     headerMode="screen"
     screenOptions={navigationProps}
   >
+    {/*<Stack.Screen name="MainScree" component={MainScreen} /> */}
     <Stack.Screen name="Home" component={TabNavigator} />
     <Stack.Screen name="ProductsScreen" component={Products} />
     <Stack.Screen name="CheckoutScreen" component={Checkout} />

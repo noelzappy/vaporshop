@@ -7,12 +7,15 @@ import {
   CLEAR_FILTER_ERRORS,
   CLEAR_PLACE_ORDER_ERROR,
   CLEAR_PRODUCT_ERRORS,
+  CLEAR_WAREHOUSE_ERROR,
   GET_CATEGORIES_FAILED,
   GET_CATEGORIES_SUCCESS,
   GET_FOLDER_FILTERED_PRODUCTS_FAILED,
   GET_FOLDER_FILTERED_PRODUCTS_SUCCESS,
   GET_PRODUCTS_FAILED,
   GET_PRODUCTS_SUCCESS,
+  GET_WAREHOUSE_FAILED,
+  GET_WAREHOUSE_SUCCESS,
   ORDER_PLACED_FAILED,
   ORDER_PLACED_SUCCESS,
   REMOVE_FROM_CART,
@@ -38,12 +41,16 @@ const INTIAL_STATE = {
 
   orderPlacementSuccess: false,
   orderPlacementFailed: false,
+
+  wareHouses: null,
+  getWareHousesError: null,
+  getWareHouseFail: false,
+  getWareHouseSuccess: false,
 }
 
 function appReducer(state = INTIAL_STATE, action) {
   switch (action.type) {
     case GET_PRODUCTS_SUCCESS: {
-
       return {
         ...state,
         products: action.payload,
@@ -152,6 +159,27 @@ function appReducer(state = INTIAL_STATE, action) {
         ...state,
         orderPlacementFailed: false,
         orderPlacementSuccess: false,
+      }
+    case GET_WAREHOUSE_SUCCESS:
+      return {
+        ...state,
+        wareHouses: action.payload,
+        getWareHouseFail: false,
+        getWareHouseSuccess: true,
+        getWareHousesError: null,
+      }
+    case GET_WAREHOUSE_FAILED:
+      return {
+        ...state,
+        getWareHouseFail: true,
+        getWareHouseSuccess: false,
+        getWareHousesError: action.payload,
+      }
+    case CLEAR_WAREHOUSE_ERROR:
+      return {
+        ...state,
+        getWareHouseFail: false,
+        getWareHousesError: null,
       }
 
     default:

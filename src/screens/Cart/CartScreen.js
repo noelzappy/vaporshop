@@ -2,13 +2,18 @@ import React, { useState, useEffect } from 'react'
 import { View, Text, FlatList, TouchableOpacity } from 'react-native'
 import { Button, Header } from 'react-native-elements'
 import { useDispatch, useSelector } from 'react-redux'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'
 import FontIcon from 'react-native-vector-icons/FontAwesome5'
 import numeral from 'numeral'
-import { colors, fontSizes } from 'theme'
 import { height, width } from 'react-native-dimension'
 import _ from 'lodash'
-import { clearCart, numberFormatter, removeFromCart } from '../../utils/Actions'
+import {
+  addToCart,
+  clearCart,
+  numberFormatter,
+  removeFromCart,
+} from '../../utils/Actions'
+import { colors, fontSizes } from '../../theme'
 
 export default function CartScreen({ navigation }) {
   const dispatch = useDispatch()
@@ -130,10 +135,12 @@ export default function CartScreen({ navigation }) {
             // )
 
             return (
-              <TouchableOpacity
-                onPress={() => {
-                  dispatch(removeFromCart(item))
-                  calcTotalCost()
+              <View
+                style={{
+                  backgroundColor: colors.white,
+                  marginVertical: height(1),
+                  marginHorizontal: width(2),
+                  borderRadius: width(2),
                 }}
               >
                 <View
@@ -144,8 +151,6 @@ export default function CartScreen({ navigation }) {
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     alignContent: 'center',
-                    borderBottomColor: colors.pink,
-                    borderBottomWidth: 2,
                     paddingBottom: width(1),
                     marginTop: height(2),
                   }}
@@ -153,11 +158,10 @@ export default function CartScreen({ navigation }) {
                 >
                   <Text
                     style={{
-                      width: '50%',
+                      maxWidth: '50%',
                       fontSize: fontSizes.maxi,
                       marginRight: width(3),
                     }}
-                    numberOfLines={1}
                   >
                     {item.name}
                   </Text>
@@ -188,7 +192,50 @@ export default function CartScreen({ navigation }) {
                     ₴
                   </Text>
                 </View>
-              </TouchableOpacity>
+
+                <View
+                  style={{
+                    justifyContent: 'space-between',
+                    flexDirection: 'row',
+                    marginHorizontal: width(5),
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={() => {
+                      dispatch(removeFromCart(item))
+                      calcTotalCost()
+                    }}
+                    style={{
+                      backgroundColor: colors.pink,
+                      borderRadius: width(12),
+                      padding: width(1),
+                    }}
+                  >
+                    <AntDesign name="minus" size={24} color={colors.white} />
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      dispatch(addToCart(item))
+                      calcTotalCost()
+                    }}
+                    style={{
+                      backgroundColor: colors.pink,
+                      borderRadius: width(12),
+                      padding: width(1),
+                    }}
+                  >
+                    <AntDesign name="plus" size={24} color={colors.white} />
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    borderBottomColor: colors.pink,
+                    borderBottomWidth: 2,
+                    marginTop: height(1),
+                  }}
+                />
+              </View>
             )
           }
         }}
