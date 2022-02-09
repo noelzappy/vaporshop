@@ -252,33 +252,8 @@ export default function Products({ navigation, route }) {
                   }}
                 >
                   <SkeletonLoader.Item
-                    style={{ width: width(15), height: 20 }}
+                    style={{ width: width(30), height: 30 }}
                   />
-                  <SkeletonLoader.Container
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <SkeletonLoader.Item
-                      style={{
-                        width: width(3),
-                        height: 20,
-
-                        borderRadius: width(10),
-                      }}
-                    />
-                    <SkeletonLoader.Item
-                      style={{
-                        width: width(3),
-                        height: 20,
-
-                        marginLeft: 5,
-                        borderRadius: width(10),
-                      }}
-                    />
-                  </SkeletonLoader.Container>
                 </SkeletonLoader.Container>
               </SkeletonLoader.Container>
 
@@ -295,7 +270,6 @@ export default function Products({ navigation, route }) {
                 />
               </SkeletonLoader.Container>
             </SkeletonLoader.Container>
-
             <SkeletonLoader.Container
               style={{
                 paddingVertical: 10,
@@ -318,33 +292,8 @@ export default function Products({ navigation, route }) {
                   }}
                 >
                   <SkeletonLoader.Item
-                    style={{ width: width(15), height: 20 }}
+                    style={{ width: width(30), height: 30 }}
                   />
-                  <SkeletonLoader.Container
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <SkeletonLoader.Item
-                      style={{
-                        width: width(3),
-                        height: 20,
-
-                        borderRadius: width(10),
-                      }}
-                    />
-                    <SkeletonLoader.Item
-                      style={{
-                        width: width(3),
-                        height: 20,
-
-                        marginLeft: 5,
-                        borderRadius: width(10),
-                      }}
-                    />
-                  </SkeletonLoader.Container>
                 </SkeletonLoader.Container>
               </SkeletonLoader.Container>
 
@@ -361,7 +310,6 @@ export default function Products({ navigation, route }) {
                 />
               </SkeletonLoader.Container>
             </SkeletonLoader.Container>
-
             <SkeletonLoader.Container
               style={{
                 paddingVertical: 10,
@@ -384,33 +332,8 @@ export default function Products({ navigation, route }) {
                   }}
                 >
                   <SkeletonLoader.Item
-                    style={{ width: width(15), height: 20 }}
+                    style={{ width: width(30), height: 30 }}
                   />
-                  <SkeletonLoader.Container
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <SkeletonLoader.Item
-                      style={{
-                        width: width(3),
-                        height: 20,
-
-                        borderRadius: width(10),
-                      }}
-                    />
-                    <SkeletonLoader.Item
-                      style={{
-                        width: width(3),
-                        height: 20,
-
-                        marginLeft: 5,
-                        borderRadius: width(10),
-                      }}
-                    />
-                  </SkeletonLoader.Container>
                 </SkeletonLoader.Container>
               </SkeletonLoader.Container>
 
@@ -427,7 +350,6 @@ export default function Products({ navigation, route }) {
                 />
               </SkeletonLoader.Container>
             </SkeletonLoader.Container>
-
             <SkeletonLoader.Container
               style={{
                 paddingVertical: 10,
@@ -450,33 +372,8 @@ export default function Products({ navigation, route }) {
                   }}
                 >
                   <SkeletonLoader.Item
-                    style={{ width: width(15), height: 20 }}
+                    style={{ width: width(30), height: 30 }}
                   />
-                  <SkeletonLoader.Container
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <SkeletonLoader.Item
-                      style={{
-                        width: width(3),
-                        height: 20,
-
-                        borderRadius: width(10),
-                      }}
-                    />
-                    <SkeletonLoader.Item
-                      style={{
-                        width: width(3),
-                        height: 20,
-
-                        marginLeft: 5,
-                        borderRadius: width(10),
-                      }}
-                    />
-                  </SkeletonLoader.Container>
                 </SkeletonLoader.Container>
               </SkeletonLoader.Container>
 

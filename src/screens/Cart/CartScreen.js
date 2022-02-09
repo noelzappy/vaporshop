@@ -21,7 +21,20 @@ export default function CartScreen({ navigation }) {
   const { shoppingCart } = app
 
   const [totalCartCost, setTotalCartCost] = useState(0)
-  let cartItems = []
+  const [cartItems, setCartItems] = useState([])
+  const [itemsToCompare, setItemsToCompare] = useState([])
+
+  const calCartItems = () => {
+    const tempArr = []
+    const newArr = []
+    shoppingCart.forEach((item) => {
+      if (!tempArr.includes(item.id)) {
+        tempArr.push(item.id)
+        newArr.push(item)
+      }
+    })
+    setCartItems(newArr)
+  }
 
   const getPriceFromCart = (itemId) => {
     let price = 0
@@ -55,11 +68,13 @@ export default function CartScreen({ navigation }) {
   }
 
   useEffect(() => {
+    calCartItems()
     calcTotalCost()
+    return setCartItems([])
   }, [])
 
   useEffect(() => {
-    cartItems = []
+    calCartItems()
     calcTotalCost()
   }, [shoppingCart])
 
@@ -97,9 +112,9 @@ export default function CartScreen({ navigation }) {
               alignItems: 'center',
             }}
             onPress={() => {
-              cartItems = []
               setTotalCartCost(0)
               dispatch(clearCart())
+              setCartItems([])
             }}
           >
             <MaterialCommunityIcons
@@ -118,7 +133,7 @@ export default function CartScreen({ navigation }) {
         )}
       />
       <FlatList
-        data={shoppingCart}
+        data={cartItems}
         keyExtractor={(item, index) => `${item.id}-${index}`}
         renderItem={({ item }) => {
           const cartCount = shoppingCart.reduce(
@@ -126,118 +141,109 @@ export default function CartScreen({ navigation }) {
             0,
           )
 
-          if (cartItems.includes(item.id) === false) {
-            cartItems.push(item.id)
-
-            // eachItemCost.push(
-            //   cartCount *
-            //     numeral(item.salePrices[0].value / 100).format('0.00'),
-            // )
-
-            return (
+          return (
+            <View
+              style={{
+                backgroundColor: colors.white,
+                marginVertical: height(1),
+                marginHorizontal: width(2),
+                borderRadius: width(2),
+              }}
+            >
               <View
                 style={{
-                  backgroundColor: colors.white,
-                  marginVertical: height(1),
+                  flexDirection: 'row',
+                  marginVertical: width(2),
                   marginHorizontal: width(2),
-                  borderRadius: width(2),
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  alignContent: 'center',
+                  paddingBottom: width(1),
+                  marginTop: height(2),
+                }}
+                key={item.id}
+              >
+                <Text
+                  style={{
+                    maxWidth: '50%',
+                    fontSize: fontSizes.maxi,
+                    marginRight: width(3),
+                  }}
+                >
+                  {item.name}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: fontSizes.maxi,
+                    marginRight: width(3),
+                  }}
+                >
+                  {cartCount} X{' '}
+                  {numberFormatter(
+                    numeral(item.salePrices[0].value / 100).format('0.00'),
+                    2,
+                    true,
+                  )}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: fontSizes.maxi,
+                    marginRight: width(3),
+                    fontWeight: 'bold',
+                  }}
+                >
+                  {cartCount *
+                    numeral(item.salePrices[0].value / 100).format('0.00')}{' '}
+                  ₴
+                </Text>
+              </View>
+
+              <View
+                style={{
+                  justifyContent: 'space-between',
+                  flexDirection: 'row',
+                  marginHorizontal: width(5),
                 }}
               >
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    marginVertical: width(2),
-                    marginHorizontal: width(2),
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    alignContent: 'center',
-                    paddingBottom: width(1),
-                    marginTop: height(2),
+                <TouchableOpacity
+                  onPress={() => {
+                    dispatch(removeFromCart(item))
+                    calcTotalCost()
+                    calCartItems()
                   }}
-                  key={item.id}
-                >
-                  <Text
-                    style={{
-                      maxWidth: '50%',
-                      fontSize: fontSizes.maxi,
-                      marginRight: width(3),
-                    }}
-                  >
-                    {item.name}
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: fontSizes.maxi,
-                      marginRight: width(3),
-                    }}
-                  >
-                    {cartCount} X{' '}
-                    {numberFormatter(
-                      numeral(item.salePrices[0].value / 100).format('0.00'),
-                      2,
-                      true,
-                    )}
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: fontSizes.maxi,
-                      marginRight: width(3),
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    {cartCount *
-                      numeral(item.salePrices[0].value / 100).format(
-                        '0.00',
-                      )}{' '}
-                    ₴
-                  </Text>
-                </View>
-
-                <View
                   style={{
-                    justifyContent: 'space-between',
-                    flexDirection: 'row',
-                    marginHorizontal: width(5),
+                    backgroundColor: colors.pink,
+                    borderRadius: width(12),
+                    padding: width(1),
                   }}
                 >
-                  <TouchableOpacity
-                    onPress={() => {
-                      dispatch(removeFromCart(item))
-                      calcTotalCost()
-                    }}
-                    style={{
-                      backgroundColor: colors.pink,
-                      borderRadius: width(12),
-                      padding: width(1),
-                    }}
-                  >
-                    <AntDesign name="minus" size={24} color={colors.white} />
-                  </TouchableOpacity>
+                  <AntDesign name="minus" size={24} color={colors.white} />
+                </TouchableOpacity>
 
-                  <TouchableOpacity
-                    onPress={() => {
-                      dispatch(addToCart(item))
-                      calcTotalCost()
-                    }}
-                    style={{
-                      backgroundColor: colors.pink,
-                      borderRadius: width(12),
-                      padding: width(1),
-                    }}
-                  >
-                    <AntDesign name="plus" size={24} color={colors.white} />
-                  </TouchableOpacity>
-                </View>
-                <View
-                  style={{
-                    borderBottomColor: colors.pink,
-                    borderBottomWidth: 2,
-                    marginTop: height(1),
+                <TouchableOpacity
+                  onPress={() => {
+                    dispatch(addToCart(item))
+                    calcTotalCost()
+                    calCartItems()
                   }}
-                />
+                  style={{
+                    backgroundColor: colors.pink,
+                    borderRadius: width(12),
+                    padding: width(1),
+                  }}
+                >
+                  <AntDesign name="plus" size={24} color={colors.white} />
+                </TouchableOpacity>
               </View>
-            )
-          }
+              <View
+                style={{
+                  borderBottomColor: colors.pink,
+                  borderBottomWidth: 2,
+                  marginTop: height(1),
+                }}
+              />
+            </View>
+          )
         }}
         ListFooterComponent={() => {
           return (
