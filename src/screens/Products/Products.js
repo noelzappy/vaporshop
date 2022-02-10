@@ -18,7 +18,7 @@ import { appStyles } from '../../theme/styles'
 export default function Products({ navigation, route }) {
   const dispatch = useDispatch()
   const dropDownAlert = useRef(null)
-  const { category } = route.params
+  const { category, itemCount } = route.params
   const { app } = useSelector((state) => state)
   const {
     folderFilteredProducts,
@@ -31,16 +31,21 @@ export default function Products({ navigation, route }) {
   const [searchResult, setSearchResult] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
   const [isLoaded, setIsLoaded] = useState(false)
+  const [isAllEmpty, setIsAllEmpty] = useState(false)
 
   function fetchFilteredItems(cat) {
     const filtObj = `${cat.pathName}/${cat.name}`
     dispatch(getProductsFilteredByFolder(filtObj))
   }
+
   // Fetch prducts
   useEffect(() => {
-    // console.log(category)
-
-    fetchFilteredItems(category)
+    if (itemCount <= 0) {
+      setIsAllEmpty(true)
+      setIsLoaded(true)
+    } else {
+      fetchFilteredItems(category)
+    }
   }, [])
 
   useEffect(() => {
@@ -49,7 +54,6 @@ export default function Products({ navigation, route }) {
       !folderFilteredProductsFailed &&
       folderFilteredProducts !== null
     ) {
-      // console.log(folderFilteredProducts)
       setIsLoaded(true)
     } else if (folderFilteredProductsFailed && !folderFilteredProductsSuccess) {
       setIsLoaded(false)
@@ -133,7 +137,11 @@ export default function Products({ navigation, route }) {
           <FlatList
             initialNumToRender={30}
             data={
-              searchResult.length > 0 ? searchResult : folderFilteredProducts
+              isAllEmpty
+                ? []
+                : searchResult.length > 0
+                ? searchResult
+                : folderFilteredProducts
             }
             renderItem={({ item }) => {
               return <ProductItem item={item} shoppingCart={shoppingCart} />

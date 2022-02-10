@@ -19,6 +19,7 @@ import {
   ORDER_PLACED_FAILED,
   ORDER_PLACED_SUCCESS,
   REMOVE_FROM_CART,
+  SET_DEFAULT_STORE,
 } from './Actions'
 
 const INTIAL_STATE = {
@@ -46,6 +47,8 @@ const INTIAL_STATE = {
   getWareHousesError: null,
   getWareHouseFail: false,
   getWareHouseSuccess: false,
+
+  defaultStore: null,
 }
 
 function appReducer(state = INTIAL_STATE, action) {
@@ -180,6 +183,11 @@ function appReducer(state = INTIAL_STATE, action) {
         ...state,
         getWareHouseFail: false,
         getWareHousesError: null,
+      }
+    case SET_DEFAULT_STORE:
+      return {
+        ...state,
+        defaultStore: action.payload,
       }
 
     default:

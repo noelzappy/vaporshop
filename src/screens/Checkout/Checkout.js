@@ -18,7 +18,12 @@ import { sendDataToBot, clearOrderErrors, clearCart } from '../../utils/Actions'
 export default function Checkout({ navigation, route }) {
   const dispatch = useDispatch()
   const { app } = useSelector((state) => state)
-  const { shoppingCart, orderPlacementSuccess, orderPlacementFailed } = app
+  const {
+    shoppingCart,
+    orderPlacementSuccess,
+    orderPlacementFailed,
+    defaultStore,
+  } = app
   const phoneInput = useRef(null)
   const dropDownAlert = useRef(null)
   const { totalCost } = route.params
@@ -31,6 +36,7 @@ export default function Checkout({ navigation, route }) {
   const [orderComment, setOrderComment] = useState('')
   const [paymentMethod, settPaymentMethod] = useState('cash')
   const [orderedItems, setOrderedItems] = useState([])
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   function calculateCart() {
     const cartItems = []
@@ -69,6 +75,7 @@ export default function Checkout({ navigation, route }) {
 
   useEffect(() => {
     if (orderPlacementSuccess && !orderPlacementFailed) {
+      setIsSubmitting(false)
       dropDownAlert.current.alertWithType(
         'success',
         'Order',
@@ -76,9 +83,13 @@ export default function Checkout({ navigation, route }) {
       )
       dispatch(clearCart())
       dispatch(clearOrderErrors())
-
       resetUserData()
+
+      setTimeout(() => {
+        navigation.navigate('Home')
+      }, 2000)
     } else if (!orderPlacementSuccess && orderPlacementFailed) {
+      setIsSubmitting(false)
       dropDownAlert.current.alertWithType(
         'error',
         'Order',
@@ -89,6 +100,7 @@ export default function Checkout({ navigation, route }) {
   }, [orderPlacementSuccess, orderPlacementFailed])
 
   function submitData() {
+    setIsSubmitting(true)
     const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
     if (userName === '') {
       dropDownAlert.current.alertWithType(
@@ -96,36 +108,42 @@ export default function Checkout({ navigation, route }) {
         'Order',
         'Please enter enter your name',
       )
+      setIsSubmitting(false)
     } else if (userEmail === '' || userEmail === null) {
       dropDownAlert.current.alertWithType(
         'error',
         'Order',
         'Please enter an email address',
       )
+      setIsSubmitting(false)
     } else if (!userEmail.match(regexEmail)) {
       dropDownAlert.current.alertWithType(
         'error',
         'Order',
         'Please enter a valid email address',
       )
+      setIsSubmitting(false)
     } else if (userPhoneNumber === '' || userPhoneNumber === null) {
       dropDownAlert.current.alertWithType(
         'error',
         'Order',
         'Please enter your phone number',
       )
+      setIsSubmitting(false)
     } else if (userDeliveryAddress === '' || userDeliveryAddress === null) {
       dropDownAlert.current.alertWithType(
         'error',
         'Order',
         'Please enter your delivery address',
       )
+      setIsSubmitting(false)
     } else if (phoneInput.current.isValidNumber(userPhoneNumber) === false) {
       dropDownAlert.current.alertWithType(
         'error',
         'Order',
         'Please enter a valid phone number',
       )
+      setIsSubmitting(false)
     } else {
       dispatch(
         sendDataToBot({
@@ -136,6 +154,8 @@ export default function Checkout({ navigation, route }) {
             userDeliveryAddress,
             orderComment,
             paymentMethod,
+            defaultStore,
+            totalCost,
           },
           data: orderedItems,
         }),
@@ -393,6 +413,7 @@ export default function Checkout({ navigation, route }) {
               onPress={() => {
                 submitData()
               }}
+              loading={isSubmitting}
             />
           </View>
         </View>

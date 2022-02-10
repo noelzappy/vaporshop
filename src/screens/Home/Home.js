@@ -1,7 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { AntDesign, MaterialIcons, Ionicons } from '@expo/vector-icons'
 import PropTypes from 'prop-types'
-import { Text, View, StatusBar, TouchableOpacity, FlatList } from 'react-native'
+import {
+  Text,
+  View,
+  StatusBar,
+  TouchableOpacity,
+  FlatList,
+  ActivityIndicator,
+} from 'react-native'
 import { Header, Input } from 'react-native-elements'
 import FontIcon from 'react-native-vector-icons/FontAwesome5'
 import { useDispatch, useSelector } from 'react-redux'
@@ -16,6 +23,7 @@ import {
   clearFilteredProducts,
   getProducts,
   getWarehouse,
+  setDefaulStore,
 } from '../../utils/Actions'
 
 const Home = ({ navigation }) => {
@@ -28,23 +36,25 @@ const Home = ({ navigation }) => {
     getCategoriesFailed,
     getCategoriesSuccess,
     folderFilteredProducts,
-
+    products,
     wareHouses,
-    getWareHousesError,
-    getWareHouseFail,
-    getWareHouseSuccess,
+    defaultStore,
   } = app
 
   const [searchResult, setSearchResult] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
   const [showCityModal, setShowCityModal] = useState(false)
+  const [isLoadingQuantity, setIsLoadingQuantity] = useState(false)
 
   useEffect(() => {
-    dispatch(getProducts())
-    dispatch(getWarehouse())
-    dispatch(clearFilteredProducts())
-    console.log(wareHouses)
+    if (defaultStore === null) {
+      dispatch(setDefaulStore(wareHouses[0]))
+    }
   }, [])
+
+  useEffect(() => {
+    setIsLoadingQuantity(false)
+  }, [products])
 
   useEffect(() => {
     if (
@@ -107,16 +117,21 @@ const Home = ({ navigation }) => {
         }}
         backgroundColor={colors.white}
         centerComponent={() => (
-          <Text
-            style={{
-              fontSize: fontSizes.maxi,
-              fontWeight: 'bold',
-              paddingTop: width(2),
-            }}
-            numberOfLines={1}
-          >
-            Одноразові под системи
-          </Text>
+          <View style={{ paddingTop: width(2) }}>
+            {isLoadingQuantity ? (
+              <ActivityIndicator color={colors.black} size="small" />
+            ) : (
+              <Text
+                style={{
+                  fontSize: fontSizes.maxi,
+                  fontWeight: 'bold',
+                }}
+                numberOfLines={1}
+              >
+                {defaultStore ? defaultStore.name : 'Одноразові под системи'}
+              </Text>
+            )}
+          </View>
         )}
         leftComponent={() => (
           <TouchableOpacity
@@ -190,6 +205,11 @@ const Home = ({ navigation }) => {
                 padding: height(1.6),
                 borderRadius: width(2),
               }}
+              onPress={() => {
+                setIsLoadingQuantity(true)
+                dispatch(setDefaulStore(wareHouses[0]))
+                setShowCityModal(false)
+              }}
             >
               <Text
                 style={{
@@ -209,6 +229,11 @@ const Home = ({ navigation }) => {
                 backgroundColor: colors.pink,
                 padding: height(1.6),
                 borderRadius: width(2),
+              }}
+              onPress={() => {
+                setIsLoadingQuantity(true)
+                dispatch(setDefaulStore(wareHouses[1]))
+                setShowCityModal(false)
               }}
             >
               <Text
@@ -239,6 +264,15 @@ const Home = ({ navigation }) => {
       <FlatList
         data={searchResult.length > 0 ? searchResult : productCategories}
         renderItem={({ item }) => {
+          const categoryItems = products.filter((obj) => {
+            if (
+              obj.pathName === `${item.pathName}/${item.name}` &&
+              obj.quantity > 0
+            ) {
+              return obj
+            }
+          })
+
           return (
             <TouchableOpacity
               activeOpacity={0.7}
@@ -246,6 +280,7 @@ const Home = ({ navigation }) => {
                 dispatch(clearFilteredProducts())
                 navigation.navigate('ProductsScreen', {
                   category: item,
+                  itemCount: categoryItems.length,
                 })
               }}
             >
@@ -285,6 +320,43 @@ const Home = ({ navigation }) => {
                     >
                       {item.name.toUpperCase()}
                     </Text>
+                    <View
+                      style={{
+                        marginTop: height(2),
+                        flexDirection: 'row',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <View>
+                        <Text
+                          style={{
+                            color: colors.white,
+                            fontSize: fontSizes.maxi,
+                          }}
+                        >
+                          Quantity:{' '}
+                        </Text>
+                      </View>
+                      <View>
+                        {isLoadingQuantity ? (
+                          <ActivityIndicator
+                            color={colors.white}
+                            size="small"
+                          />
+                        ) : (
+                          <Text
+                            style={{
+                              color: colors.white,
+                              fontSize: fontSizes.maxi,
+                            }}
+                          >
+                            {' '}
+                            {categoryItems.length}
+                          </Text>
+                        )}
+                      </View>
+                    </View>
                   </View>
                 </View>
               </View>

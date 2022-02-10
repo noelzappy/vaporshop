@@ -21,6 +21,7 @@ export const CLEAR_PLACE_ORDER_ERROR = 'CLEAR_PLACE_ORDER_ERROR'
 export const GET_WAREHOUSE_SUCCESS = 'GET_WAREHOUSE_SUCCESS'
 export const GET_WAREHOUSE_FAILED = 'GET_WAREHOUSE_FAILED'
 export const CLEAR_WAREHOUSE_ERROR = 'CLEAR_WAREHOUSE_ERROR'
+export const SET_DEFAULT_STORE = 'SET_DEFAULT_STORE'
 
 export const APP_TOKEN = 'YWRtaW5AdmFwb3Jzc3VwMjpBbnRvbmJiMQ'
 export const TELEGRAM_TOKEN = '5186679461:AAFJo2Mz001hRuATFfKHu0UJ3clSQKmHjwI'
@@ -30,9 +31,18 @@ export const headers = {
 }
 const baseURL = 'https://online.moysklad.ru/api/remap/1.2/entity'
 
-export const getProducts = () => (dispatch) => {
+export const getProducts = () => (dispatch, getState) => {
+  const { defaultStore } = getState().app
+
   axios
-    .get(`${baseURL}/assortment`, { headers })
+    .get(
+      defaultStore
+        ? `${baseURL}/assortment?filter=stockStore=https://online.moysklad.ru/api/remap/1.2/entity/store/${defaultStore.id}`
+        : `${baseURL}/assortment`,
+      {
+        headers,
+      },
+    )
     .then((res) => {
       dispatch({
         type: GET_PRODUCTS_SUCCESS,
@@ -187,7 +197,15 @@ export function sendDataToBot({ userDetails, data }) {
     axios
       .post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
         chat_id: '@vapors_chat_test',
-        text: `<b>NEW ORDER</b>\n\nPerson Name: ${userDetails.userName}\nEmail: ${userDetails.userEmail}\nPhone Number: ${userDetails.userPhoneNumber}\nDelivery Address: ${userDetails.userDeliveryAddress}\nComment: ${userDetails.orderComment}\nPayment Method: ${userDetails.paymentMethod}\n${data}
+        text: `<b>NEW ORDER</b>\n\nPerson Name: ${
+          userDetails.userName
+        }\nEmail: ${userDetails.userEmail}\nPhone Number: ${
+          userDetails.userPhoneNumber
+        }\nDelivery Address: ${userDetails.userDeliveryAddress}\nComment: ${
+          userDetails.orderComment
+        }\nPayment Method: ${userDetails.paymentMethod.toUpperCase()}\nStore: ${
+          userDetails.defaultStore.name
+        }\n<b>TOTAL: ${userDetails.totalCost}</b>\n${data}
         `,
         parse_mode: 'HTML',
       })
@@ -197,7 +215,7 @@ export function sendDataToBot({ userDetails, data }) {
         })
       })
       .catch((error) => {
-        // console.log(error.response.data)
+        console.log(error.response.data)
         dispatch({
           type: ORDER_PLACED_FAILED,
         })
@@ -242,5 +260,13 @@ export function clearWareHouseError() {
   return (dispatch) =>
     dispatch({
       type: CLEAR_WAREHOUSE_ERROR,
+    })
+}
+
+export function setDefaulStore(store) {
+  return (dispatch) =>
+    dispatch({
+      type: SET_DEFAULT_STORE,
+      payload: store,
     })
 }
