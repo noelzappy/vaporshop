@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native'
 import { AntDesign, MaterialIcons } from '@expo/vector-icons'
 import { useSelector, useDispatch } from 'react-redux'
-import { colors, fontSizes, images } from 'theme'
+import { colors, fontSizes, images, fonts } from 'theme'
 import { height, width } from 'react-native-dimension'
 import fuzzysort from 'fuzzysort'
 import SkeletonLoader from 'expo-skeleton-loader'
@@ -18,7 +18,7 @@ import { appStyles } from '../../theme/styles'
 export default function Products({ navigation, route }) {
   const dispatch = useDispatch()
   const dropDownAlert = useRef(null)
-  const { category, itemCount } = route.params
+  const { category, itemCount, fromHome, itemName, titleName } = route.params
   const { app } = useSelector((state) => state)
   const {
     folderFilteredProducts,
@@ -34,17 +34,21 @@ export default function Products({ navigation, route }) {
   const [isAllEmpty, setIsAllEmpty] = useState(false)
 
   function fetchFilteredItems(cat) {
-    const filtObj = `${cat.pathName}/${cat.name}`
+    const filtObj = fromHome ? `${cat.pathName}/${cat.name}` : cat
     dispatch(getProductsFilteredByFolder(filtObj))
   }
 
   // Fetch prducts
   useEffect(() => {
-    if (itemCount <= 0) {
-      setIsAllEmpty(true)
-      setIsLoaded(true)
+    if (fromHome) {
+      if (itemCount <= 0) {
+        setIsAllEmpty(true)
+        setIsLoaded(true)
+      } else {
+        fetchFilteredItems(category)
+      }
     } else {
-      fetchFilteredItems(category)
+      fetchFilteredItems(itemName)
     }
   }, [])
 
@@ -113,9 +117,11 @@ export default function Products({ navigation, route }) {
             style={{
               fontSize: fontSizes.big,
               fontWeight: 'bold',
+              fontFamily: fonts.mates.semiBold,
             }}
+            numberOfLines={1}
           >
-            {category.name}
+            {fromHome ? category.name : titleName}
           </Text>
         )}
         backgroundColor={colors.white}
@@ -168,6 +174,7 @@ export default function Products({ navigation, route }) {
                     fontSize: fontSizes.maxi,
                     fontWeight: 'bold',
                     marginTop: height(2),
+                    fontFamily: fonts.mates.semiBold,
                   }}
                 >
                   No Product Found In Category
@@ -205,6 +212,7 @@ export default function Products({ navigation, route }) {
                     style={{
                       fontSize: fontSizes.normal,
                       fontWeight: 'bold',
+                      fontFamily: fonts.mates.semiBold,
                     }}
                   >
                     {shoppingCart.length}

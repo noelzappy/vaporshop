@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useLayoutEffect } from 'react'
 import { AntDesign, MaterialIcons, Ionicons } from '@expo/vector-icons'
 import PropTypes from 'prop-types'
 import {
@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   FlatList,
   ActivityIndicator,
+  ImageBackground,
 } from 'react-native'
 import { Header, Input } from 'react-native-elements'
 import FontIcon from 'react-native-vector-icons/FontAwesome5'
@@ -16,7 +17,7 @@ import { height, width } from 'react-native-dimension'
 import DropdownAlert from 'react-native-dropdownalert'
 import fuzzysort from 'fuzzysort'
 import Modal from 'react-native-modal'
-import { colors, fontSizes, appStyles } from '../../theme'
+import { colors, fontSizes, appStyles, images, fonts } from '../../theme'
 
 import {
   clearCategoryErrors,
@@ -45,6 +46,12 @@ const Home = ({ navigation }) => {
   const [searchTerm, setSearchTerm] = useState('')
   const [showCityModal, setShowCityModal] = useState(false)
   const [isLoadingQuantity, setIsLoadingQuantity] = useState(false)
+
+  // useLayoutEffect(() => {
+  //   productCategories.forEach((item) => {
+  //     item.bgImage = itemImages.filter((i) => i.name === item.name)
+  //   })
+  // }, [])
 
   useEffect(() => {
     if (defaultStore === null) {
@@ -125,6 +132,7 @@ const Home = ({ navigation }) => {
                 style={{
                   fontSize: fontSizes.maxi,
                   fontWeight: 'bold',
+                  fontFamily: fonts.mates.semiBold,
                 }}
                 numberOfLines={1}
               >
@@ -187,6 +195,7 @@ const Home = ({ navigation }) => {
               <Text
                 style={{
                   fontSize: fontSizes.big,
+                  fontFamily: fonts.mates.semiBold,
                 }}
               >
                 Виберіть магазин
@@ -215,6 +224,7 @@ const Home = ({ navigation }) => {
                 style={{
                   color: colors.white,
                   fontSize: fontSizes.maxi,
+                  fontFamily: fonts.mates.semiBold,
                 }}
               >
                 Вул. торгова 15
@@ -240,6 +250,7 @@ const Home = ({ navigation }) => {
                 style={{
                   color: colors.white,
                   fontSize: fontSizes.maxi,
+                  fontFamily: fonts.mates.semiBold,
                 }}
               >
                 Пр. Чорновола 4
@@ -262,8 +273,12 @@ const Home = ({ navigation }) => {
       />
 
       <FlatList
-        data={searchResult.length > 0 ? searchResult : productCategories}
-        renderItem={({ item }) => {
+        data={
+          searchResult.length > 0
+            ? searchResult.sort((a, b) => a.name.localeCompare(b.name))
+            : productCategories.sort((a, b) => a.name.localeCompare(b.name))
+        }
+        renderItem={({ item, index }) => {
           const categoryItems = products.filter((obj) => {
             if (
               obj.pathName === `${item.pathName}/${item.name}` &&
@@ -273,6 +288,44 @@ const Home = ({ navigation }) => {
             }
           })
 
+          let bgImage = images.one
+
+          switch (item.name) {
+            case 'Adalya 1200':
+              bgImage = images.five
+              break
+            case 'B-more 1600':
+              bgImage = images.six
+              break
+            case 'Elf bar 1500':
+              bgImage = images.one
+              break
+            case 'Elf bar 2000':
+              bgImage = images.two
+              break
+            case 'Joyful 1500':
+              bgImage = images.four
+              break
+            case 'Joyfull 600':
+              bgImage = images.three
+              break
+            case 'Troll bar 1500':
+              bgImage = images.seven
+              break
+            case 'Vaal 1500':
+              bgImage = images.eight
+              break
+            case 'Vaporlax 1800':
+              bgImage = images.nine
+              break
+            case 'Vaporlax mate 800':
+              bgImage = images.ten
+              break
+            default:
+              bgImage = null
+              break
+          }
+
           return (
             <TouchableOpacity
               activeOpacity={0.7}
@@ -281,85 +334,50 @@ const Home = ({ navigation }) => {
                 navigation.navigate('ProductsScreen', {
                   category: item,
                   itemCount: categoryItems.length,
+                  fromHome: true,
                 })
               }}
             >
-              <View style={appStyles.homeContainer2}>
-                <View style={appStyles.homeContainer1}>
-                  {/* <View
+              <ImageBackground
+                style={appStyles.homeContainer2}
+                source={bgImage}
+                resizeMode="cover"
+                imageStyle={{
+                  borderRadius: width(5),
+                  width: '100%',
+                }}
+              >
+                <View
+                  style={{
+                    height: height(19.5),
+                  }}
+                />
+                <View
+                  style={{
+                    borderRadius: width(5),
+                    paddingHorizontal: width(3),
+                    justifyContent: 'center',
+                    flexWrap: 'wrap',
+                  }}
+                >
+                  <Text
                     style={{
-                      marginTop: height(1),
+                      paddingTop: height(1),
+                      color: colors.black,
+                      fontSize: fontSizes.big,
+                      fontWeight: 'bold',
+                      backgroundColor: colors.white,
+                      borderRadius: width(4),
+                      paddingHorizontal: width(3),
+                      overflow: 'hidden',
+                      paddingBottom: width(1),
+                      fontFamily: fonts.mates.semiBold,
                     }}
-                  > */}
-                  {/* <Image
-                      style={{
-                        width: height(20),
-                        height: '100%',
-                      }}
-                      source={{
-                        uri: item.meta.href,
-                        method: 'POST',
-                        headers: {
-                          Authorization:
-                            'Basic YWRtaW5AeXVyYWx5c3lzaGFrOjU5MDhmNjFkZDE',
-                        },
-                      }}
-                      height={height(10)}
-                      width={width(50)}
-                      PlaceholderContent={<ActivityIndicator />}
-                    /> */}
-
-                  <View>
-                    <Text
-                      style={{
-                        paddingTop: height(1),
-                        color: colors.white,
-                        fontSize: fontSizes.big,
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      {item.name.toUpperCase()}
-                    </Text>
-                    <View
-                      style={{
-                        marginTop: height(2),
-                        flexDirection: 'row',
-                        justifyContent: 'flex-start',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <View>
-                        <Text
-                          style={{
-                            color: colors.white,
-                            fontSize: fontSizes.maxi,
-                          }}
-                        >
-                          Quantity:{' '}
-                        </Text>
-                      </View>
-                      <View>
-                        {isLoadingQuantity ? (
-                          <ActivityIndicator
-                            color={colors.white}
-                            size="small"
-                          />
-                        ) : (
-                          <Text
-                            style={{
-                              color: colors.white,
-                              fontSize: fontSizes.maxi,
-                            }}
-                          >
-                            {' '}
-                            {categoryItems.length}
-                          </Text>
-                        )}
-                      </View>
-                    </View>
-                  </View>
+                  >
+                    {item.name.toUpperCase()}
+                  </Text>
                 </View>
-              </View>
+              </ImageBackground>
             </TouchableOpacity>
           )
         }}

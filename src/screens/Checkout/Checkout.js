@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
 import { Button, Header, Input } from 'react-native-elements'
-import { colors, fontSizes } from 'theme'
+import { colors, fontSizes, fonts } from 'theme'
 import {
   AntDesign,
   Ionicons,
@@ -176,9 +176,10 @@ export default function Checkout({ navigation, route }) {
             style={{
               fontSize: fontSizes.big,
               fontWeight: 'bold',
+              fontFamily: fonts.mates.semiBold,
             }}
           >
-            Checkout
+            Ваша інформація
           </Text>
         )}
         backgroundColor={colors.white}
@@ -189,9 +190,10 @@ export default function Checkout({ navigation, route }) {
           fontWeight: 'bold',
           textAlign: 'center',
           marginTop: height(2),
+          fontFamily: fonts.mates.semiBold,
         }}
       >
-        Total: {totalCartCost} ₴
+        Загальна сума: {totalCartCost} ₴
       </Text>
       <ScrollView
         style={{
@@ -201,7 +203,7 @@ export default function Checkout({ navigation, route }) {
       >
         <View>
           <Input
-            placeholder="Your Full Name"
+            placeholder="Iм`я та прізвище"
             leftIcon={() => (
               <Ionicons name="person-outline" size={24} color="black" />
             )}
@@ -213,6 +215,7 @@ export default function Checkout({ navigation, route }) {
               backgroundColor: colors.white,
             }}
             value={userName}
+            inputStyle={{ fontFamily: fonts.mates.semiBold }}
           />
 
           <View
@@ -236,10 +239,14 @@ export default function Checkout({ navigation, route }) {
                 borderWidth: 1,
                 backgroundColor: colors.white,
               }}
+              flagButtonStyle={{
+                display: 'none',
+              }}
+              placeholder="Hомер телефону"
             />
           </View>
           <Input
-            placeholder="Your Email Address"
+            placeholder="Eлектронна пошта "
             leftIcon={() => (
               <MaterialCommunityIcons
                 name="email-outline"
@@ -255,11 +262,12 @@ export default function Checkout({ navigation, route }) {
               backgroundColor: colors.white,
             }}
             value={userEmail}
+            inputStyle={{ fontFamily: fonts.mates.semiBold }}
             keyboardType="email-address"
           />
 
           <Input
-            placeholder="Delivery Address"
+            placeholder="Адрес доставки"
             leftIcon={() => (
               <MaterialCommunityIcons
                 name="truck-delivery-outline"
@@ -275,10 +283,19 @@ export default function Checkout({ navigation, route }) {
               backgroundColor: colors.white,
             }}
             value={userDeliveryAddress}
+            inputStyle={{ fontFamily: fonts.mates.semiBold }}
+            errorMessage="Вкажіть вулицю, будинок, квартиру, при замовлені в інше місто вкажіть дані нової пошти"
+            containerStyle={{
+              marginBottom: height(2),
+            }}
+            errorStyle={{
+              color: colors.black,
+              fontFamily: fonts.mates.regular,
+            }}
           />
 
           <Input
-            placeholder="Comment about your order"
+            placeholder="Коментарій замовлення"
             leftIcon={() => (
               <MaterialCommunityIcons
                 name="comment-outline"
@@ -297,6 +314,7 @@ export default function Checkout({ navigation, route }) {
             value={orderComment}
             multiline
             numberOfLines={4}
+            inputStyle={{ fontFamily: fonts.mates.semiBold }}
           />
           <View
             style={{
@@ -309,9 +327,10 @@ export default function Checkout({ navigation, route }) {
                 fontSize: fontSizes.maxi,
                 fontWeight: 'bold',
                 paddingBottom: height(1),
+                fontFamily: fonts.mates.semiBold,
               }}
             >
-              Payment Method
+              Метод оплати:
             </Text>
             <Button
               containerStyle={{
@@ -336,8 +355,9 @@ export default function Checkout({ navigation, route }) {
                 color: colors.black,
                 textAlign: 'left',
                 paddingLeft: width(3),
+                fontFamily: fonts.mates.semiBold,
               }}
-              title="MASTERCARD/VISA"
+              title={`Картою`.toUpperCase()}
               onPress={() => {
                 settPaymentMethod('card')
               }}
@@ -374,8 +394,9 @@ export default function Checkout({ navigation, route }) {
                 color: colors.black,
                 textAlign: 'left',
                 paddingLeft: width(3),
+                fontFamily: fonts.mates.semiBold,
               }}
-              title="CASH"
+              title={`Готівкою`.toLocaleUpperCase()}
               onPress={() => {
                 settPaymentMethod('cash')
               }}
@@ -408,8 +429,9 @@ export default function Checkout({ navigation, route }) {
               }}
               titleStyle={{
                 fontSize: fontSizes.big,
+                fontFamily: fonts.mates.semiBold,
               }}
-              title="SUBMIT"
+              title={`Підтвердити`.toUpperCase()}
               onPress={() => {
                 submitData()
               }}

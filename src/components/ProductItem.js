@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 import { height, width } from 'react-native-dimension'
 import numeral from 'numeral'
 import { addToCart, headers, removeFromCart } from '../utils/Actions'
-import { colors, fontSizes, images } from '../theme'
+import { colors, fontSizes, images, fonts } from '../theme'
 
 export default function ProductItem({ item, shoppingCart }) {
   const dispatch = useDispatch()
@@ -46,6 +46,7 @@ export default function ProductItem({ item, shoppingCart }) {
               color: colors.black,
               fontSize: fontSizes.normal,
               fontWeight: 'bold',
+              fontFamily: fonts.mates.semiBold,
             }}
             numberOfLines={2}
           >
@@ -61,37 +62,11 @@ export default function ProductItem({ item, shoppingCart }) {
                 fontSize: fontSizes.maxi,
                 fontWeight: 'bold',
                 color: colors.black,
+                fontFamily: fonts.mates.semiBold,
               }}
             >
               {numeral(item?.salePrices[0].value / 100).format('0.00')} ₴
             </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              // paddingTop: height(2),
-              alignItems: 'center',
-            }}
-          >
-            {/*            <View
-              style={{
-                width: '60%',
-              }}
-            >
-              <Text
-                style={{
-                  paddingTop: height(1),
-                  fontSize: fontSizes.normal,
-                  color: item.quantity > 0 ? 'green' : 'red',
-                }}
-                numberOfLines={2}
-              >
-                {item.quantity > 0
-                  ? `${'Наявність: Є'}`
-                  : `${'Наявність: Немає'}`}
-              </Text>
-                </View> */}
           </View>
 
           <View
@@ -121,6 +96,7 @@ export default function ProductItem({ item, shoppingCart }) {
                 style={{
                   color: colors.white,
                   fontSize: 12,
+                  fontFamily: fonts.mates.semiBold,
                 }}
                 numberOfLines={1}
               >
@@ -133,7 +109,13 @@ export default function ProductItem({ item, shoppingCart }) {
                   padding: width(4),
                 }}
               >
-                <Text>{cartCount}</Text>
+                <Text
+                  style={{
+                    fontFamily: fonts.mates.semiBold,
+                  }}
+                >
+                  {cartCount}
+                </Text>
               </View>
             )}
             {cartCount > 0 && (
@@ -156,6 +138,7 @@ export default function ProductItem({ item, shoppingCart }) {
                   style={{
                     color: colors.white,
                     fontSize: 12,
+                    fontFamily: fonts.mates.semiBold,
                   }}
                   numberOfLines={1}
                 >

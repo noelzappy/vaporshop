@@ -4,12 +4,13 @@ import {
   DrawerContentScrollView,
   DrawerItem,
 } from '@react-navigation/drawer'
-import { View, Image, Text, Linking } from 'react-native'
+import { View, Image, Text, Linking, TouchableOpacity } from 'react-native'
 import { height, width } from 'react-native-dimension'
 import HomeNavigator from '../Stacks'
 import { fontSizes } from '../../theme/styles'
 import colors from '../../theme/colors'
-import images from '../../theme/images'
+import { fonts } from '../../theme'
+import MenuLogo from '../../../assets/images/menulogo.svg'
 
 const Drawer = createDrawerNavigator()
 
@@ -31,6 +32,75 @@ const DrawerMenuContainer = (props) => {
           labelStyle={{
             fontSize: 17,
             color: colors.black,
+            fontFamily: fonts.mates.semiBold,
+          }}
+          style={{
+            backgroundColor: colors.spGray,
+          }}
+        />
+
+        <DrawerItem
+          label="Рідини для POD систем"
+          onPress={() => {
+            navigation.navigate('HomeScreen')
+          }}
+          labelStyle={{
+            fontSize: 17,
+            color: colors.black,
+            fontFamily: fonts.mates.semiBold,
+          }}
+          style={{
+            backgroundColor: colors.spGray,
+          }}
+        />
+        <DrawerItem
+          label="Картриджі"
+          onPress={() => {
+            navigation.navigate('ProductsScreen', {
+              itemName: '04 Картриджі',
+              titleName: 'Картриджі',
+            })
+          }}
+          labelStyle={{
+            fontSize: 17,
+            color: colors.black,
+            fontFamily: fonts.mates.semiBold,
+          }}
+          style={{
+            backgroundColor: colors.spGray,
+          }}
+        />
+
+        <DrawerItem
+          label="Bипаровувачі"
+          onPress={() => {
+            navigation.navigate('ProductsScreen', {
+              itemName: '05 Випаровувачі',
+              titleName: 'Bипаровувачі',
+            })
+          }}
+          labelStyle={{
+            fontSize: 17,
+            color: colors.black,
+            fontFamily: fonts.mates.semiBold,
+          }}
+          style={{
+            backgroundColor: colors.spGray,
+          }}
+        />
+
+        <DrawerItem
+          label="Напої"
+          onPress={() => {
+            navigation.navigate('ProductsScreen', {
+              itemName: '12 Напої',
+              titleName: 'Напої',
+            })
+          }}
+          labelStyle={{
+            fontSize: 17,
+            color: colors.black,
+            fontFamily: fonts.mates.semiBold,
           }}
           style={{
             backgroundColor: colors.spGray,
@@ -38,31 +108,28 @@ const DrawerMenuContainer = (props) => {
         />
       </View>
 
-      <View
+      <TouchableOpacity
         style={{
-          marginTop: height(55),
-          alignItems: 'center',
+          marginTop: height(45),
+          alignItems: 'flex-start',
+          paddingLeft: width(3),
         }}
+        onPress={() => Linking.openURL('https://noelzappy.github.io')}
+        activeOpacity={0.9}
       >
-        <Image
-          source={images.logo}
-          style={{
-            width: width(40),
-            height: height(20),
-            marginBottom: height(2),
-          }}
-        />
+        <MenuLogo width={width(20)} height={height(10)} />
         <Text
           style={{
             color: colors.gray,
             textAlign: 'center',
             fontSize: fontSizes.normal,
+            paddingLeft: width(3),
+            fontFamily: fonts.mates.semiBold,
           }}
-          onPress={() => Linking.openURL('https://noelzappy.github.io')}
         >
-          Created by Zappy
+          By Zappy
         </Text>
-      </View>
+      </TouchableOpacity>
     </DrawerContentScrollView>
   )
 }

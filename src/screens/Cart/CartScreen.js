@@ -13,7 +13,7 @@ import {
   numberFormatter,
   removeFromCart,
 } from '../../utils/Actions'
-import { colors, fontSizes } from '../../theme'
+import { colors, fontSizes, fonts } from '../../theme'
 
 export default function CartScreen({ navigation }) {
   const dispatch = useDispatch()
@@ -100,9 +100,11 @@ export default function CartScreen({ navigation }) {
             style={{
               fontSize: fontSizes.big,
               fontWeight: 'bold',
+              fontFamily: fonts.mates.semiBold,
             }}
+            numberOfLines={1}
           >
-            Cart
+            магазинний візок
           </Text>
         )}
         backgroundColor={colors.white}
@@ -122,13 +124,14 @@ export default function CartScreen({ navigation }) {
               size={24}
               color="black"
             />
-            <Text
+            {/*   <Text
               style={{
                 fontWeight: 'bold',
+                fontFamily: fonts.mates.semiBold,
               }}
             >
-              Clear Cart
-            </Text>
+              Видалити всі
+            </Text> */}
           </TouchableOpacity>
         )}
       />
@@ -168,6 +171,7 @@ export default function CartScreen({ navigation }) {
                     maxWidth: '50%',
                     fontSize: fontSizes.maxi,
                     marginRight: width(3),
+                    fontFamily: fonts.mates.semiBold,
                   }}
                 >
                   {item.name}
@@ -176,6 +180,7 @@ export default function CartScreen({ navigation }) {
                   style={{
                     fontSize: fontSizes.maxi,
                     marginRight: width(3),
+                    fontFamily: fonts.mates.semiBold,
                   }}
                 >
                   {cartCount} X{' '}
@@ -190,6 +195,7 @@ export default function CartScreen({ navigation }) {
                     fontSize: fontSizes.maxi,
                     marginRight: width(3),
                     fontWeight: 'bold',
+                    fontFamily: fonts.mates.semiBold,
                   }}
                 >
                   {cartCount *
@@ -262,6 +268,7 @@ export default function CartScreen({ navigation }) {
                   fontSize: fontSizes.huge,
                   fontWeight: 'bold',
                   textAlign: 'center',
+                  fontFamily: fonts.mates.semiBold,
                 }}
               >
                 Total: {totalCartCost} ₴
@@ -284,6 +291,7 @@ export default function CartScreen({ navigation }) {
                   }}
                   titleStyle={{
                     fontSize: fontSizes.big,
+                    fontFamily: fonts.mates.semiBold,
                   }}
                   title="Checkout"
                   onPress={() => {
