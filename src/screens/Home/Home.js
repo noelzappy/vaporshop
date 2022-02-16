@@ -9,7 +9,9 @@ import {
   FlatList,
   ActivityIndicator,
   ImageBackground,
+  RefreshControl,
 } from 'react-native'
+import { copilot, walkthroughable, CopilotStep } from 'react-native-copilot'
 import { Header, Input } from 'react-native-elements'
 import FontIcon from 'react-native-vector-icons/FontAwesome5'
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,17 +19,21 @@ import { height, width } from 'react-native-dimension'
 import DropdownAlert from 'react-native-dropdownalert'
 import fuzzysort from 'fuzzysort'
 import Modal from 'react-native-modal'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { colors, fontSizes, appStyles, images, fonts } from '../../theme'
 
 import {
   clearCategoryErrors,
   clearFilteredProducts,
-  getProducts,
-  getWarehouse,
   setDefaulStore,
+  getWarehouse,
+  getProducts,
+  getCategories,
 } from '../../utils/Actions'
 
-const Home = ({ navigation }) => {
+const CopilotText = walkthroughable(TouchableOpacity)
+
+const Home = ({ navigation, start }) => {
   const dispatch = useDispatch()
   const dropDownAlert = useRef(null)
   const { app } = useSelector((state) => state)
@@ -46,6 +52,7 @@ const Home = ({ navigation }) => {
   const [searchTerm, setSearchTerm] = useState('')
   const [showCityModal, setShowCityModal] = useState(false)
   const [isLoadingQuantity, setIsLoadingQuantity] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
 
   // useLayoutEffect(() => {
   //   productCategories.forEach((item) => {
@@ -53,14 +60,47 @@ const Home = ({ navigation }) => {
   //   })
   // }, [])
 
-  useEffect(() => {
-    if (defaultStore === null) {
-      dispatch(setDefaulStore(wareHouses[0]))
+  const storeData = async (value) => {
+    try {
+      await AsyncStorage.setItem('@walkthough', value)
+    } catch (e) {
+      // saving error
+    }
+  }
+
+  const getData = async () => {
+    let val = null
+    try {
+      const value = await AsyncStorage.getItem('@walkthough')
+      val = value
+    } catch (e) {
+      // error reading value
+    }
+    return val
+  }
+
+  useEffect(async () => {
+    const dt = await getData()
+    if (dt === null) {
+      start()
+      storeData('shown')
     }
   }, [])
 
   useEffect(() => {
-    setIsLoadingQuantity(false)
+    if (defaultStore === null) {
+      dispatch(getWarehouse())
+    }
+  }, [])
+
+  useEffect(() => {
+    if (defaultStore === null) {
+      dispatch(setDefaulStore(wareHouses[0]))
+    }
+  }, [wareHouses])
+
+  useEffect(() => {
+    setRefreshing(false)
   }, [products])
 
   useEffect(() => {
@@ -104,43 +144,6 @@ const Home = ({ navigation }) => {
   return (
     <>
       <Header
-        rightComponent={() => (
-          <TouchableOpacity
-            onPress={() => {
-              setShowCityModal(true)
-            }}
-          >
-            <Ionicons
-              name="location"
-              color={colors.black}
-              size={height(4)}
-              solid
-            />
-          </TouchableOpacity>
-        )}
-        containerStyle={{
-          paddingTop: 0,
-          // marginTop: 0,
-        }}
-        backgroundColor={colors.white}
-        centerComponent={() => (
-          <View style={{ paddingTop: width(2) }}>
-            {isLoadingQuantity ? (
-              <ActivityIndicator color={colors.black} size="small" />
-            ) : (
-              <Text
-                style={{
-                  fontSize: fontSizes.maxi,
-                  fontWeight: 'bold',
-                  fontFamily: fonts.mates.semiBold,
-                }}
-                numberOfLines={1}
-              >
-                {defaultStore ? defaultStore.name : 'Одноразові под системи'}
-              </Text>
-            )}
-          </View>
-        )}
         leftComponent={() => (
           <TouchableOpacity
             onPress={() => {
@@ -154,6 +157,41 @@ const Home = ({ navigation }) => {
               solid
             />
           </TouchableOpacity>
+        )}
+        containerStyle={{
+          paddingTop: 0,
+          // marginTop: 0,
+        }}
+        backgroundColor={colors.white}
+        centerComponent={() => (
+          <View style={{ paddingTop: width(2) }}>
+            <Text
+              style={{
+                fontSize: fontSizes.maxi,
+                fontWeight: 'bold',
+                fontFamily: fonts.mates.semiBold,
+              }}
+              numberOfLines={1}
+            >
+              {defaultStore ? defaultStore.name : 'Одноразові под системи'}
+            </Text>
+          </View>
+        )}
+        rightComponent={() => (
+          <CopilotStep text="Виберіть магазин" order={1}>
+            <CopilotText
+              onPress={() => {
+                setShowCityModal(true)
+              }}
+            >
+              <Ionicons
+                name="location"
+                color={colors.black}
+                size={height(4)}
+                solid
+              />
+            </CopilotText>
+          </CopilotStep>
         )}
       />
 
@@ -190,15 +228,17 @@ const Home = ({ navigation }) => {
               style={{
                 width: '100%',
                 alignItems: 'center',
+                marginLeft: -width(5),
               }}
             >
               <Text
                 style={{
                   fontSize: fontSizes.big,
                   fontFamily: fonts.mates.semiBold,
+                  textAlign: 'center',
                 }}
               >
-                Виберіть магазин
+                Виберіть магазин:
               </Text>
             </View>
           </View>
@@ -261,7 +301,7 @@ const Home = ({ navigation }) => {
       </Modal>
 
       <Input
-        placeholder="Search.."
+        placeholder="Пошук..."
         leftIcon={() => (
           <MaterialIcons name="search" size={24} color={colors.white} />
         )}
@@ -273,6 +313,19 @@ const Home = ({ navigation }) => {
       />
 
       <FlatList
+        refreshing
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => {
+              setRefreshing(true)
+              dispatch(getProducts())
+              dispatch(getWarehouse())
+              dispatch(getCategories())
+            }}
+            tintColor={colors.pink}
+          />
+        }
         data={
           searchResult.length > 0
             ? searchResult.sort((a, b) => a.name.localeCompare(b.name))
@@ -349,7 +402,7 @@ const Home = ({ navigation }) => {
               >
                 <View
                   style={{
-                    height: height(19.5),
+                    height: height(19.2),
                   }}
                 />
                 <View
@@ -370,7 +423,7 @@ const Home = ({ navigation }) => {
                       borderRadius: width(4),
                       paddingHorizontal: width(3),
                       overflow: 'hidden',
-                      paddingBottom: width(1),
+                      paddingBottom: width(1.5),
                       fontFamily: fonts.mates.semiBold,
                     }}
                   >
@@ -400,4 +453,8 @@ Home.defaultProps = {
   navigation: { navigate: () => null },
 }
 
-export default Home
+export default copilot({
+  labels: {
+    finish: 'OK',
+  },
+})(Home)

@@ -7,7 +7,7 @@ import { height, width } from 'react-native-dimension'
 import fuzzysort from 'fuzzysort'
 import SkeletonLoader from 'expo-skeleton-loader'
 import DropdownAlert from 'react-native-dropdownalert'
-import { Header, Input } from 'react-native-elements'
+import { FAB, Header, Input } from 'react-native-elements'
 import ProductItem from '../../components/ProductItem'
 import {
   clearFilterErrors,
@@ -101,11 +101,7 @@ export default function Products({ navigation, route }) {
   }, [searchTerm])
 
   return (
-    <View
-      style={{
-        marginBottom: height(15),
-      }}
-    >
+    <>
       <Header
         leftComponent={() => (
           <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -129,7 +125,7 @@ export default function Products({ navigation, route }) {
       {isLoaded ? (
         <>
           <Input
-            placeholder="Search.."
+            placeholder="Пошук..."
             leftIcon={() => (
               <MaterialIcons name="search" size={24} color={colors.white} />
             )}
@@ -146,11 +142,19 @@ export default function Products({ navigation, route }) {
               isAllEmpty
                 ? []
                 : searchResult.length > 0
-                ? searchResult
-                : folderFilteredProducts
+                ? searchResult.sort((a, b) => a.name.localeCompare(b.name))
+                : folderFilteredProducts.sort((a, b) =>
+                    a.name.localeCompare(b.name),
+                  )
             }
             renderItem={({ item }) => {
-              return <ProductItem item={item} shoppingCart={shoppingCart} />
+              return (
+                <ProductItem
+                  item={item}
+                  shoppingCart={shoppingCart}
+                  dropDownAlert={dropDownAlert}
+                />
+              )
             }}
             ListEmptyComponent={() => (
               <View
@@ -182,46 +186,6 @@ export default function Products({ navigation, route }) {
               </View>
             )}
           />
-          {folderFilteredProducts && folderFilteredProducts.length > 0 && (
-            <>
-              <TouchableOpacity
-                style={{
-                  width: height(8),
-                  height: height(8),
-                  borderRadius: 30,
-                  backgroundColor: colors.black,
-                  position: 'absolute',
-                  bottom: height(5),
-                  right: 10,
-                  flexWrap: 'wrap',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  alignContent: 'center',
-                }}
-                activeOpacity={0.8}
-                onPress={() => navigation.navigate('CartScreen')}
-              >
-                <View
-                  style={{
-                    backgroundColor: colors.white,
-                    borderRadius: width(3),
-                    padding: width(1),
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: fontSizes.normal,
-                      fontWeight: 'bold',
-                      fontFamily: fonts.mates.semiBold,
-                    }}
-                  >
-                    {shoppingCart.length}
-                  </Text>
-                </View>
-                <AntDesign name="shoppingcart" size={28} color={colors.white} />
-              </TouchableOpacity>
-            </>
-          )}
         </>
       ) : (
         <View
@@ -410,6 +374,18 @@ export default function Products({ navigation, route }) {
         </View>
       )}
       <DropdownAlert ref={dropDownAlert} />
-    </View>
+
+      {folderFilteredProducts && folderFilteredProducts.length > 0 && (
+        <FAB
+          placement="right"
+          icon={() => (
+            <AntDesign name="shoppingcart" size={28} color={colors.white} />
+          )}
+          title={shoppingCart.length}
+          color={colors.black}
+          onPress={() => navigation.navigate('CartScreen')}
+        />
+      )}
+    </>
   )
 }

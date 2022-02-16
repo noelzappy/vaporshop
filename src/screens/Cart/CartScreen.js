@@ -104,7 +104,7 @@ export default function CartScreen({ navigation }) {
             }}
             numberOfLines={1}
           >
-            магазинний візок
+            Корзина
           </Text>
         )}
         backgroundColor={colors.white}
@@ -121,10 +121,10 @@ export default function CartScreen({ navigation }) {
           >
             <MaterialCommunityIcons
               name="delete-variant"
-              size={24}
+              size={36}
               color="black"
             />
-            {/*   <Text
+            {/*  <Text
               style={{
                 fontWeight: 'bold',
                 fontFamily: fonts.mates.semiBold,
@@ -271,7 +271,7 @@ export default function CartScreen({ navigation }) {
                   fontFamily: fonts.mates.semiBold,
                 }}
               >
-                Total: {totalCartCost} ₴
+                Загальна сума: {totalCartCost} ₴
               </Text>
 
               <View
@@ -293,7 +293,7 @@ export default function CartScreen({ navigation }) {
                     fontSize: fontSizes.big,
                     fontFamily: fonts.mates.semiBold,
                   }}
-                  title="Checkout"
+                  title="Підтвердити"
                   onPress={() => {
                     navigation.navigate('CheckoutScreen', {
                       totalCost: totalCartCost,

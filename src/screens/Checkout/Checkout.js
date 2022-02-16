@@ -10,6 +10,7 @@ import {
 } from '@expo/vector-icons'
 import PhoneInput from 'react-native-phone-number-input'
 import DropdownAlert from 'react-native-dropdownalert'
+import Modal from 'react-native-modal'
 import numeral from 'numeral'
 import { useDispatch, useSelector } from 'react-redux'
 import { width, height } from 'react-native-dimension'
@@ -37,6 +38,8 @@ export default function Checkout({ navigation, route }) {
   const [paymentMethod, settPaymentMethod] = useState('cash')
   const [orderedItems, setOrderedItems] = useState([])
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [orderModal, setOrderModal] = useState(false)
+  const [orderNumber, setOrderNumber] = useState(null)
 
   function calculateCart() {
     const cartItems = []
@@ -59,10 +62,15 @@ export default function Checkout({ navigation, route }) {
     setOrderedItems(tempOrderedItems)
   }
 
+  function generateOrderNumber(min, max) {
+    setOrderNumber(Math.floor(Math.random() * (max - min + 1) + min))
+  }
+
   useEffect(() => {
     setTotalCartCost(totalCost)
     dispatch(clearOrderErrors())
     calculateCart()
+    generateOrderNumber(0, 100000)
   }, [])
 
   function resetUserData() {
@@ -78,22 +86,19 @@ export default function Checkout({ navigation, route }) {
       setIsSubmitting(false)
       dropDownAlert.current.alertWithType(
         'success',
-        'Order',
-        'Your Order was places successfuly',
+        'Замовлення',
+        'Ваше замовлення було успішно розміщено',
       )
+      setOrderModal(true)
       dispatch(clearCart())
       dispatch(clearOrderErrors())
       resetUserData()
-
-      setTimeout(() => {
-        navigation.navigate('Home')
-      }, 2000)
     } else if (!orderPlacementSuccess && orderPlacementFailed) {
       setIsSubmitting(false)
       dropDownAlert.current.alertWithType(
         'error',
-        'Order',
-        'We could not place your order. Pleasetry again',
+        'Замовлення',
+        'Ми не змогли розмістити ваше замовлення. Будь ласка спробуйте ще раз',
       )
       dispatch(clearOrderErrors())
     }
@@ -105,43 +110,43 @@ export default function Checkout({ navigation, route }) {
     if (userName === '') {
       dropDownAlert.current.alertWithType(
         'error',
-        'Order',
-        'Please enter enter your name',
+        'Замолення',
+        'Будь ласка, введіть ваше ім`я та прізвище',
       )
       setIsSubmitting(false)
     } else if (userEmail === '' || userEmail === null) {
       dropDownAlert.current.alertWithType(
         'error',
-        'Order',
-        'Please enter an email address',
+        'Замовлення',
+        'Будь ласка, введіть вашу електронну пошту',
       )
       setIsSubmitting(false)
     } else if (!userEmail.match(regexEmail)) {
       dropDownAlert.current.alertWithType(
         'error',
-        'Order',
-        'Please enter a valid email address',
+        'Замовлення',
+        'Будь ласка, введіть правильну електронну пошту',
       )
       setIsSubmitting(false)
     } else if (userPhoneNumber === '' || userPhoneNumber === null) {
       dropDownAlert.current.alertWithType(
         'error',
-        'Order',
-        'Please enter your phone number',
+        'Замовлення',
+        'Будь ласка, введіть ваш номер телефону',
       )
       setIsSubmitting(false)
     } else if (userDeliveryAddress === '' || userDeliveryAddress === null) {
       dropDownAlert.current.alertWithType(
         'error',
-        'Order',
-        'Please enter your delivery address',
+        'Замовлення',
+        'Будь ласка, введіть ваш адрес доставки',
       )
       setIsSubmitting(false)
     } else if (phoneInput.current.isValidNumber(userPhoneNumber) === false) {
       dropDownAlert.current.alertWithType(
         'error',
-        'Order',
-        'Please enter a valid phone number',
+        'Замовлення',
+        'Будь ласка, введіть ваш правильний номер телефону',
       )
       setIsSubmitting(false)
     } else {
@@ -156,6 +161,7 @@ export default function Checkout({ navigation, route }) {
             paymentMethod,
             defaultStore,
             totalCost,
+            orderNumber,
           },
           data: orderedItems,
         }),
@@ -193,8 +199,78 @@ export default function Checkout({ navigation, route }) {
           fontFamily: fonts.mates.semiBold,
         }}
       >
-        Загальна сума: {totalCartCost} ₴
+        Загальна сума: {totalCartCost}₴
       </Text>
+
+      <Modal isVisible={orderModal}>
+        <View
+          style={{
+            backgroundColor: colors.white,
+            paddingVertical: height(2),
+            borderRadius: width(2),
+            paddingHorizontal: width(3),
+          }}
+        >
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              borderBottomColor: colors.pink,
+              borderBottomWidth: 2,
+              paddingBottom: height(1),
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => setOrderModal(false)}
+              style={{
+                padding: height(1),
+                backgroundColor: colors.spGray,
+                borderRadius: width(12),
+              }}
+            >
+              <AntDesign name="close" size={23} color={colors.pink} />
+            </TouchableOpacity>
+
+            <View
+              style={{
+                width: '100%',
+                alignItems: 'center',
+                marginLeft: -width(5),
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: fontSizes.big,
+                  fontFamily: fonts.mates.semiBold,
+                  textAlign: 'center',
+                }}
+              >
+                #{orderNumber}
+              </Text>
+              <Text> {defaultStore.name}</Text>
+            </View>
+          </View>
+
+          <View
+            style={{
+              padding: width(2),
+            }}
+          >
+            <Text
+              style={{
+                fontSize: fontSizes.maxi,
+                fontFamily: fonts.mates.regular,
+              }}
+            >
+              Дякуємо вам за замовлення! Ваш номер замовлення: #{orderNumber}.{' '}
+              Доставка по місту триває 30-90хв але ми робимо все можливе щоб ви
+              отримали її найближчим часом, ваш V-SHOP.” для запитань або
+              уточнень телефонуйте нам 0630714486.
+            </Text>
+          </View>
+        </View>
+      </Modal>
+
       <ScrollView
         style={{
           marginTop: height(2),
@@ -213,11 +289,13 @@ export default function Checkout({ navigation, route }) {
               borderColor: colors.pink,
               paddingHorizontal: width(1.6),
               backgroundColor: colors.white,
+              borderRadius: width(5),
             }}
             value={userName}
-            inputStyle={{ fontFamily: fonts.mates.semiBold }}
+            inputStyle={{
+              fontFamily: fonts.mates.semiBold,
+            }}
           />
-
           <View
             style={{
               justifyContent: 'center',
@@ -238,6 +316,8 @@ export default function Checkout({ navigation, route }) {
                 borderColor: colors.pink,
                 borderWidth: 1,
                 backgroundColor: colors.white,
+                borderRadius: width(5),
+                paddingHorizontal: width(7),
               }}
               flagButtonStyle={{
                 display: 'none',
@@ -260,12 +340,14 @@ export default function Checkout({ navigation, route }) {
               borderColor: colors.pink,
               paddingHorizontal: width(1.6),
               backgroundColor: colors.white,
+              borderRadius: width(5),
             }}
             value={userEmail}
-            inputStyle={{ fontFamily: fonts.mates.semiBold }}
+            inputStyle={{
+              fontFamily: fonts.mates.semiBold,
+            }}
             keyboardType="email-address"
           />
-
           <Input
             placeholder="Адрес доставки"
             leftIcon={() => (
@@ -281,9 +363,12 @@ export default function Checkout({ navigation, route }) {
               borderColor: colors.pink,
               paddingHorizontal: width(1.6),
               backgroundColor: colors.white,
+              borderRadius: width(5),
             }}
             value={userDeliveryAddress}
-            inputStyle={{ fontFamily: fonts.mates.semiBold }}
+            inputStyle={{
+              fontFamily: fonts.mates.semiBold,
+            }}
             errorMessage="Вкажіть вулицю, будинок, квартиру, при замовлені в інше місто вкажіть дані нової пошти"
             containerStyle={{
               marginBottom: height(2),
@@ -293,7 +378,6 @@ export default function Checkout({ navigation, route }) {
               fontFamily: fonts.mates.regular,
             }}
           />
-
           <Input
             placeholder="Коментарій замовлення"
             leftIcon={() => (
@@ -310,11 +394,14 @@ export default function Checkout({ navigation, route }) {
               paddingHorizontal: width(1.6),
               height: height(10),
               backgroundColor: colors.white,
+              borderRadius: width(5),
             }}
             value={orderComment}
             multiline
             numberOfLines={4}
-            inputStyle={{ fontFamily: fonts.mates.semiBold }}
+            inputStyle={{
+              fontFamily: fonts.mates.semiBold,
+            }}
           />
           <View
             style={{
@@ -341,6 +428,8 @@ export default function Checkout({ navigation, route }) {
                 alignItems: 'flex-start',
                 backgroundColor:
                   paymentMethod === 'card' ? colors.pink : colors.white,
+                borderRadius: width(5),
+                marginBottom: 5,
               }}
               buttonStyle={{
                 paddingVertical: height(1),
@@ -370,7 +459,6 @@ export default function Checkout({ navigation, route }) {
                 />
               )}
             />
-
             <Button
               containerStyle={{
                 // borderRadius: width(5),
@@ -380,6 +468,8 @@ export default function Checkout({ navigation, route }) {
                 alignItems: 'flex-start',
                 backgroundColor:
                   paymentMethod === 'cash' ? colors.pink : colors.white,
+
+                borderRadius: width(5),
               }}
               buttonStyle={{
                 paddingVertical: height(1),
@@ -410,7 +500,6 @@ export default function Checkout({ navigation, route }) {
               )}
             />
           </View>
-
           <View
             style={{
               marginTop: height(2),

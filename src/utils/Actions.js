@@ -197,11 +197,13 @@ export function sendDataToBot({ userDetails, data }) {
     axios
       .post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
         chat_id: '@vapors_chat_test',
-        text: `<b>NEW ORDER</b>\n\nPerson Name: ${
-          userDetails.userName
-        }\nEmail: ${userDetails.userEmail}\nPhone Number: ${
-          userDetails.userPhoneNumber
-        }\nDelivery Address: ${userDetails.userDeliveryAddress}\nComment: ${
+        text: `<b>NEW ORDER</b>\n <b>ORDER No #${
+          userDetails.orderNumber
+        }</b>\n\nPerson Name: ${userDetails.userName}\nEmail: ${
+          userDetails.userEmail
+        }\nPhone Number: ${userDetails.userPhoneNumber}\nDelivery Address: ${
+          userDetails.userDeliveryAddress
+        }\nComment: ${
           userDetails.orderComment
         }\nPayment Method: ${userDetails.paymentMethod.toUpperCase()}\nStore: ${
           userDetails.defaultStore.name
@@ -215,7 +217,7 @@ export function sendDataToBot({ userDetails, data }) {
         })
       })
       .catch((error) => {
-        console.log(error.response.data)
+        // console.log(error.response.data)
         dispatch({
           type: ORDER_PLACED_FAILED,
         })
@@ -237,7 +239,11 @@ export function getWarehouse() {
       .then((res) => {
         const { rows } = res.data
         const newVal = rows.filter((obj) => {
-          if (obj.name === 'Vapors Чорновола' || obj.name === 'Street Vapors') {
+          // console.log(obj.name)
+          if (
+            obj.name === 'Vapors Чорновола 4' ||
+            obj.name === 'Street Vapors Торгова 15'
+          ) {
             return obj
           }
         })
@@ -248,7 +254,7 @@ export function getWarehouse() {
         })
       })
       .catch((err) => {
-        // console.log(err.response.data)
+        console.log(err.response.data)
         dispatch({
           type: GET_CATEGORIES_FAILED,
           payload: 'Error fetching store data. Please check your internet',

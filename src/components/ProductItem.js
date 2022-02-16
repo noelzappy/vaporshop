@@ -7,7 +7,7 @@ import numeral from 'numeral'
 import { addToCart, headers, removeFromCart } from '../utils/Actions'
 import { colors, fontSizes, images, fonts } from '../theme'
 
-export default function ProductItem({ item, shoppingCart }) {
+export default function ProductItem({ item, shoppingCart, dropDownAlert }) {
   const dispatch = useDispatch()
 
   const cartCount = shoppingCart.reduce(
@@ -36,7 +36,7 @@ export default function ProductItem({ item, shoppingCart }) {
       >
         <View
           style={{
-            width: '55%',
+            width: '65%',
             marginRight: '4%',
           }}
         >
@@ -79,9 +79,17 @@ export default function ProductItem({ item, shoppingCart }) {
           >
             <TouchableOpacity
               onPress={() => {
-                dispatch(addToCart(item))
+                if (item.quantity <= 0 || cartCount === item.quantity) {
+                  dropDownAlert.current.alertWithType(
+                    'warning',
+                    'Зверніть увагу!',
+                    'Максимальна кількість товару',
+                  )
+                } else {
+                  dispatch(addToCart(item))
+                }
               }}
-              disabled={item.quantity <= 0 || cartCount === item.quantity}
+              // disabled={item.quantity <= 0 || cartCount === item.quantity}
               style={{
                 backgroundColor: colors.pink,
                 padding: height(1),
@@ -150,7 +158,7 @@ export default function ProductItem({ item, shoppingCart }) {
         </View>
         <View
           style={{
-            width: '40%',
+            width: '34%',
           }}
         >
           <Image

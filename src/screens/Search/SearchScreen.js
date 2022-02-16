@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { View, Text, FlatList, TouchableOpacity } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import FontIcon from 'react-native-vector-icons/FontAwesome5'
 import { useSelector } from 'react-redux'
 import { colors, fontSizes } from 'theme'
 import { height, width } from 'react-native-dimension'
+import DropdownAlert from 'react-native-dropdownalert'
 import { Header, Input } from 'react-native-elements'
 import fuzzysort from 'fuzzysort'
 import ProductItem from '../../components/ProductItem'
@@ -12,6 +13,7 @@ import ProductItem from '../../components/ProductItem'
 export default function SearchScreen({ navigation }) {
   const { app } = useSelector((state) => state)
   const { products, shoppingCart } = app
+  const dropDownAlert = useRef(null)
 
   const [searchKeyWord, setSearchKeyword] = useState('')
   const [foundProducts, setFoundProducts] = useState([])
@@ -81,7 +83,7 @@ export default function SearchScreen({ navigation }) {
       />
 
       <Input
-        placeholder="Search.."
+        placeholder="Пошук..."
         leftIcon={() => (
           <MaterialIcons name="search" size={24} color={colors.white} />
         )}
@@ -106,9 +108,16 @@ export default function SearchScreen({ navigation }) {
         initialNumToRender={30}
         data={foundProducts}
         renderItem={({ item }) => {
-          return <ProductItem item={item} shoppingCart={shoppingCart} />
+          return (
+            <ProductItem
+              item={item}
+              shoppingCart={shoppingCart}
+              dropDownAlert={dropDownAlert}
+            />
+          )
         }}
       />
+      <DropdownAlert ref={dropDownAlert} />
     </View>
   )
 }

@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import SearchScreen from 'screens/Search'
 import Home from 'screens/Home'
 import CartScreen from 'screens/Cart'
+import { width } from 'react-native-dimension'
 
 const Tab = createBottomTabNavigator()
 
@@ -58,6 +59,20 @@ const TabNavigator = () => {
         tabBarInactiveTintColor: colors.gray,
         tabBarLabelStyle: {
           display: 'none',
+        },
+        tabBarStyle: {
+          borderTopEndRadius: width(12),
+          borderTopStartRadius: width(12),
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 7,
+          },
+          shadowOpacity: 0.41,
+          shadowRadius: 9.11,
+
+          elevation: 5,
+          paddingTop: width(5),
         },
       })}
       initialRouteName="HomeScreen"
