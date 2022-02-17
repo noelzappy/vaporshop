@@ -1,15 +1,16 @@
-import React, { useEffect, useRef, useState, useLayoutEffect } from 'react'
-import { AntDesign, MaterialIcons, Ionicons } from '@expo/vector-icons'
+import React, { useEffect, useRef, useState } from 'react'
+import { AntDesign, MaterialIcons, Entypo } from '@expo/vector-icons'
 import PropTypes from 'prop-types'
+import { differenceInSeconds } from 'date-fns'
 import {
   Text,
   View,
   StatusBar,
   TouchableOpacity,
   FlatList,
-  ActivityIndicator,
   ImageBackground,
   RefreshControl,
+  AppState,
 } from 'react-native'
 import { copilot, walkthroughable, CopilotStep } from 'react-native-copilot'
 import { Header, Input } from 'react-native-elements'
@@ -29,6 +30,7 @@ import {
   getWarehouse,
   getProducts,
   getCategories,
+  clearCart,
 } from '../../utils/Actions'
 
 const CopilotText = walkthroughable(TouchableOpacity)
@@ -53,12 +55,6 @@ const Home = ({ navigation, start }) => {
   const [showCityModal, setShowCityModal] = useState(false)
   const [isLoadingQuantity, setIsLoadingQuantity] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
-
-  // useLayoutEffect(() => {
-  //   productCategories.forEach((item) => {
-  //     item.bgImage = itemImages.filter((i) => i.name === item.name)
-  //   })
-  // }, [])
 
   const storeData = async (value) => {
     try {
@@ -184,12 +180,7 @@ const Home = ({ navigation, start }) => {
                 setShowCityModal(true)
               }}
             >
-              <Ionicons
-                name="location"
-                color={colors.black}
-                size={height(4)}
-                solid
-              />
+              <Entypo name="shop" color={colors.black} size={height(4)} solid />
             </CopilotText>
           </CopilotStep>
         )}

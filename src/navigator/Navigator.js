@@ -10,7 +10,8 @@ const Navigator = () => {
   const dispatch = useDispatch()
   const { app } = useSelector((state) => state)
   const { productCategories, products, wareHouses, defaultStore } = app
-  useEffect(() => {
+
+  useEffect(async () => {
     dispatch(getProducts())
     dispatch(getCategories())
     dispatch(getWarehouse())

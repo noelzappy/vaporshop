@@ -3,10 +3,10 @@ import * as Font from 'expo-font'
 // fonts preloading
 export const fontAssets = [
   {
-    openSans_regular: require('../../assets/fonts/CeraRoundPro-Black.otf'),
+    openSans_regular: require('../../assets/fonts/CeraRoundPro-Light.otf'),
   },
   {
-    openSans_regular_italic: require('../../assets/fonts/CeraRoundPro-Black.otf'),
+    openSans_regular_italic: require('../../assets/fonts/CeraRoundPro-Light.otf'),
   },
   {
     openSans_semiBold: require('../../assets/fonts/CeraRoundPro-Light.otf'),

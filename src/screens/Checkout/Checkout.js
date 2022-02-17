@@ -40,6 +40,7 @@ export default function Checkout({ navigation, route }) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [orderModal, setOrderModal] = useState(false)
   const [orderNumber, setOrderNumber] = useState(null)
+  const [deliveryComment, setDeliveryComment] = useState('')
 
   function calculateCart() {
     const cartItems = []
@@ -142,7 +143,9 @@ export default function Checkout({ navigation, route }) {
         'Будь ласка, введіть ваш адрес доставки',
       )
       setIsSubmitting(false)
-    } else if (phoneInput.current.isValidNumber(userPhoneNumber) === false) {
+    } else if (
+      phoneInput.current.isValidNumber(`+380${userPhoneNumber}`) === false
+    ) {
       dropDownAlert.current.alertWithType(
         'error',
         'Замовлення',
@@ -155,13 +158,14 @@ export default function Checkout({ navigation, route }) {
           userDetails: {
             userName,
             userEmail,
-            userPhoneNumber,
+            userPhoneNumber: `+380${userPhoneNumber}`,
             userDeliveryAddress,
             orderComment,
             paymentMethod,
             defaultStore,
             totalCost,
             orderNumber,
+            deliveryComment,
           },
           data: orderedItems,
         }),
@@ -259,7 +263,7 @@ export default function Checkout({ navigation, route }) {
             <Text
               style={{
                 fontSize: fontSizes.maxi,
-                fontFamily: fonts.mates.regular,
+                fontFamily: fonts.mates.regularItalic,
               }}
             >
               Дякуємо вам за замовлення! Ваш номер замовлення: #{orderNumber}.{' '}
@@ -279,6 +283,32 @@ export default function Checkout({ navigation, route }) {
       >
         <View>
           <Input
+            placeholder="Коментарій замовлення"
+            leftIcon={() => (
+              <MaterialCommunityIcons
+                name="comment-outline"
+                size={24}
+                color="black"
+              />
+            )}
+            onChangeText={(text) => setOrderComment(text)}
+            inputContainerStyle={{
+              borderWidth: 1,
+              borderColor: colors.pink,
+              paddingHorizontal: width(1.6),
+              height: height(10),
+              backgroundColor: colors.white,
+              borderRadius: width(5),
+            }}
+            value={orderComment}
+            multiline
+            numberOfLines={4}
+            inputStyle={{
+              fontFamily: fonts.mates.semiBold,
+            }}
+          />
+
+          <Input
             placeholder="Iм`я та прізвище"
             leftIcon={() => (
               <Ionicons name="person-outline" size={24} color="black" />
@@ -296,35 +326,57 @@ export default function Checkout({ navigation, route }) {
               fontFamily: fonts.mates.semiBold,
             }}
           />
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginBottom: height(2),
-              paddingHorizontal: width(3),
+
+          <PhoneInput
+            ref={phoneInput}
+            value={userPhoneNumber}
+            containerStyle={{
+              display: 'none',
             }}
-          >
-            <PhoneInput
-              ref={phoneInput}
-              defaultCode="UA"
-              onChangeFormattedText={(text) => {
-                setUserPhoneNumber(text)
-              }}
-              value={userPhoneNumber}
-              containerStyle={{
-                width: '100%',
-                borderColor: colors.pink,
-                borderWidth: 1,
-                backgroundColor: colors.white,
-                borderRadius: width(5),
-                paddingHorizontal: width(7),
-              }}
-              flagButtonStyle={{
-                display: 'none',
-              }}
-              placeholder="Hомер телефону"
-            />
-          </View>
+          />
+
+          <Input
+            placeholder="Eлектронна пошта "
+            leftIcon={() => (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="phone-outline"
+                  size={24}
+                  color="black"
+                />
+                <Text
+                  style={{
+                    marginLeft: width(2),
+                  }}
+                >
+                  +380
+                </Text>
+              </View>
+            )}
+            onChangeText={(text) => {
+              setUserPhoneNumber(text)
+            }}
+            inputContainerStyle={{
+              borderWidth: 1,
+              borderColor: colors.pink,
+              paddingHorizontal: width(1.6),
+              backgroundColor: colors.white,
+              borderRadius: width(5),
+            }}
+            value={userPhoneNumber}
+            inputStyle={{
+              fontFamily: fonts.mates.semiBold,
+            }}
+            keyboardType="phone-pad"
+            maxLength={10}
+          />
+
           <Input
             placeholder="Eлектронна пошта "
             leftIcon={() => (
@@ -369,17 +421,17 @@ export default function Checkout({ navigation, route }) {
             inputStyle={{
               fontFamily: fonts.mates.semiBold,
             }}
-            errorMessage="Вкажіть вулицю, будинок, квартиру, при замовлені в інше місто вкажіть дані нової пошти"
+            errorMessage={`Вкажіть вулицю, будинок, квартиру, при замовлені в інше місто вкажіть дані нової пошти.\nДоставка по місту: 30-90хв`}
             containerStyle={{
               marginBottom: height(2),
             }}
             errorStyle={{
               color: colors.black,
-              fontFamily: fonts.mates.regular,
+              fontFamily: fonts.mates.bold,
             }}
           />
           <Input
-            placeholder="Коментарій замовлення"
+            placeholder="Коментарій доставки"
             leftIcon={() => (
               <MaterialCommunityIcons
                 name="comment-outline"
@@ -387,7 +439,7 @@ export default function Checkout({ navigation, route }) {
                 color="black"
               />
             )}
-            onChangeText={(text) => setOrderComment(text)}
+            onChangeText={(text) => setDeliveryComment(text)}
             inputContainerStyle={{
               borderWidth: 1,
               borderColor: colors.pink,
@@ -396,7 +448,7 @@ export default function Checkout({ navigation, route }) {
               backgroundColor: colors.white,
               borderRadius: width(5),
             }}
-            value={orderComment}
+            value={deliveryComment}
             multiline
             numberOfLines={4}
             inputStyle={{
@@ -528,7 +580,13 @@ export default function Checkout({ navigation, route }) {
             />
           </View>
         </View>
+        <View
+          style={{
+            height: height(20),
+          }}
+        />
       </ScrollView>
+
       <DropdownAlert ref={dropDownAlert} />
     </View>
   )

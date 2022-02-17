@@ -76,7 +76,7 @@ export default function SearchScreen({ navigation }) {
               fontWeight: 'bold',
             }}
           >
-            SEARCH
+            {`Пошук`.toUpperCase()}
           </Text>
         )}
         backgroundColor={colors.white}

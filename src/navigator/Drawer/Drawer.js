@@ -108,28 +108,55 @@ const DrawerMenuContainer = (props) => {
         />
       </View>
 
-      <TouchableOpacity
+      <View
         style={{
-          marginTop: height(45),
+          marginTop: height(40),
           alignItems: 'flex-start',
           paddingLeft: width(3),
         }}
-        onPress={() => Linking.openURL('https://noelzappy.github.io')}
-        activeOpacity={0.9}
       >
-        <MenuLogo width={width(20)} height={height(10)} />
-        <Text
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('AboutUs')
+          }}
           style={{
-            color: colors.gray,
-            textAlign: 'center',
-            fontSize: fontSizes.normal,
-            paddingLeft: width(3),
-            fontFamily: fonts.mates.semiBold,
+            marginBottom: height(2),
+            backgroundColor: colors.spGray,
+            paddingVertical: height(2),
+            width: '90%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: width(1),
           }}
         >
-          By Zappy
-        </Text>
-      </TouchableOpacity>
+          <Text
+            style={{
+              fontSize: 17,
+              color: colors.black,
+              fontFamily: fonts.mates.semiBold,
+            }}
+          >
+            Про нас
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => Linking.openURL('https://noelzappy.github.io')}
+          activeOpacity={0.9}
+        >
+          <MenuLogo width={width(20)} height={height(10)} />
+          <Text
+            style={{
+              color: colors.gray,
+              textAlign: 'center',
+              fontSize: fontSizes.normal,
+              paddingLeft: width(3),
+              fontFamily: fonts.mates.semiBold,
+            }}
+          >
+            By Zappy
+          </Text>
+        </TouchableOpacity>
+      </View>
     </DrawerContentScrollView>
   )
 }

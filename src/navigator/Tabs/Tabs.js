@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View, Platform } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import FontIcon from 'react-native-vector-icons/FontAwesome5'
 import { colors } from 'theme'
@@ -72,7 +72,7 @@ const TabNavigator = () => {
           shadowRadius: 9.11,
 
           elevation: 5,
-          paddingTop: width(5),
+          paddingTop: Platform.OS === 'ios' ? width(5) : width(0.1),
         },
       })}
       initialRouteName="HomeScreen"

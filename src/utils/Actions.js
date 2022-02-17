@@ -203,8 +203,8 @@ export function sendDataToBot({ userDetails, data }) {
           userDetails.userEmail
         }\nPhone Number: ${userDetails.userPhoneNumber}\nDelivery Address: ${
           userDetails.userDeliveryAddress
-        }\nComment: ${
-          userDetails.orderComment
+        }\nOrder Comment: ${userDetails.orderComment}\nDelivery Comment: ${
+          userDetails.deliveryComment
         }\nPayment Method: ${userDetails.paymentMethod.toUpperCase()}\nStore: ${
           userDetails.defaultStore.name
         }\n<b>TOTAL: ${userDetails.totalCost}</b>\n${data}
