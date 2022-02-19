@@ -363,7 +363,7 @@ const Home = ({ navigation, start }) => {
               bgImage = images.ten
               break
             default:
-              bgImage = images.one
+              bgImage = images.two
               break
           }
 
