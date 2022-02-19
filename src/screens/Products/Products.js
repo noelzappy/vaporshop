@@ -181,7 +181,7 @@ export default function Products({ navigation, route }) {
                     fontFamily: fonts.mates.semiBold,
                   }}
                 >
-                  No Product Found In Category
+                  Немає продукції в цій категорії
                 </Text>
               </View>
             )}
@@ -381,7 +381,7 @@ export default function Products({ navigation, route }) {
           icon={() => (
             <AntDesign name="shoppingcart" size={28} color={colors.white} />
           )}
-          title={shoppingCart.length}
+          title={` ${shoppingCart.length}`}
           color={colors.black}
           onPress={() => navigation.navigate('CartScreen')}
         />

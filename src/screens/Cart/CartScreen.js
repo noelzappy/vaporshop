@@ -14,6 +14,7 @@ import {
   removeFromCart,
 } from '../../utils/Actions'
 import { colors, fontSizes, fonts } from '../../theme'
+import EmptyCartImage from '../../../assets/images/empty-cart.svg'
 
 export default function CartScreen({ navigation }) {
   const dispatch = useDispatch()
@@ -22,7 +23,6 @@ export default function CartScreen({ navigation }) {
 
   const [totalCartCost, setTotalCartCost] = useState(0)
   const [cartItems, setCartItems] = useState([])
-  const [itemsToCompare, setItemsToCompare] = useState([])
 
   const calCartItems = () => {
     const tempArr = []
@@ -68,8 +68,15 @@ export default function CartScreen({ navigation }) {
   }
 
   useEffect(() => {
-    calCartItems()
-    calcTotalCost()
+    if (shoppingCart.length <= 0) {
+      setTotalCartCost(0)
+      dispatch(clearCart())
+      setCartItems([])
+    } else {
+      calCartItems()
+      calcTotalCost()
+    }
+
     return setCartItems([])
   }, [])
 
@@ -135,180 +142,249 @@ export default function CartScreen({ navigation }) {
           </TouchableOpacity>
         )}
       />
-      <FlatList
-        data={cartItems}
-        keyExtractor={(item, index) => `${item.id}-${index}`}
-        renderItem={({ item }) => {
-          const cartCount = shoppingCart.reduce(
-            (acc, cur) => (cur.id === item.id ? ++acc : acc),
-            0,
-          )
 
-          return (
-            <View
-              style={{
-                backgroundColor: colors.white,
-                marginVertical: height(1),
-                marginHorizontal: width(2),
-                borderRadius: width(2),
-              }}
-            >
+      {shoppingCart.length > 0 && (
+        <FlatList
+          data={cartItems}
+          keyExtractor={(item, index) => `${item.id}-${index}`}
+          renderItem={({ item }) => {
+            const cartCount = shoppingCart.reduce(
+              (acc, cur) => (cur.id === item.id ? ++acc : acc),
+              0,
+            )
+
+            return (
               <View
                 style={{
-                  flexDirection: 'row',
-                  marginVertical: width(2),
+                  backgroundColor: colors.white,
+                  marginVertical: height(1),
                   marginHorizontal: width(2),
-                  justifyContent: 'space-between',
+                  borderRadius: width(2),
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginVertical: width(2),
+                    marginHorizontal: width(2),
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    alignContent: 'center',
+                    paddingBottom: width(1),
+                    marginTop: height(2),
+                  }}
+                  key={item.id}
+                >
+                  <Text
+                    style={{
+                      maxWidth: '50%',
+                      fontSize: fontSizes.maxi,
+                      marginRight: width(3),
+                      fontFamily: fonts.mates.semiBold,
+                    }}
+                  >
+                    {item.name}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: fontSizes.maxi,
+                      marginRight: width(3),
+                      fontFamily: fonts.mates.semiBold,
+                    }}
+                  >
+                    {cartCount} X{' '}
+                    {numberFormatter(
+                      numeral(item.salePrices[0].value / 100).format('0.00'),
+                      2,
+                      true,
+                    )}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: fontSizes.maxi,
+                      marginRight: width(3),
+                      fontWeight: 'bold',
+                      fontFamily: fonts.mates.semiBold,
+                    }}
+                  >
+                    {cartCount *
+                      numeral(item.salePrices[0].value / 100).format(
+                        '0.00',
+                      )}{' '}
+                    ₴
+                  </Text>
+                </View>
+
+                <View
+                  style={{
+                    justifyContent: 'space-between',
+                    flexDirection: 'row',
+                    marginHorizontal: width(5),
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={() => {
+                      dispatch(removeFromCart(item))
+                      calcTotalCost()
+                      calCartItems()
+                    }}
+                    style={{
+                      backgroundColor: colors.pink,
+                      borderRadius: width(12),
+                      padding: width(1),
+                    }}
+                  >
+                    <AntDesign name="minus" size={24} color={colors.white} />
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      dispatch(addToCart(item))
+                      calcTotalCost()
+                      calCartItems()
+                    }}
+                    style={{
+                      backgroundColor: colors.pink,
+                      borderRadius: width(12),
+                      padding: width(1),
+                    }}
+                  >
+                    <AntDesign name="plus" size={24} color={colors.white} />
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    borderBottomColor: colors.pink,
+                    borderBottomWidth: 2,
+                    marginTop: height(1),
+                  }}
+                />
+              </View>
+            )
+          }}
+          ListFooterComponent={() => {
+            return (
+              <View
+                style={{
+                  justifyContent: 'center',
                   alignItems: 'center',
                   alignContent: 'center',
-                  paddingBottom: width(1),
+                  alignSelf: 'center',
+                  backgroundColor: colors.wwhite,
                   marginTop: height(2),
                 }}
-                key={item.id}
               >
                 <Text
                   style={{
-                    maxWidth: '50%',
-                    fontSize: fontSizes.maxi,
-                    marginRight: width(3),
-                    fontFamily: fonts.mates.semiBold,
-                  }}
-                >
-                  {item.name}
-                </Text>
-                <Text
-                  style={{
-                    fontSize: fontSizes.maxi,
-                    marginRight: width(3),
-                    fontFamily: fonts.mates.semiBold,
-                  }}
-                >
-                  {cartCount} X{' '}
-                  {numberFormatter(
-                    numeral(item.salePrices[0].value / 100).format('0.00'),
-                    2,
-                    true,
-                  )}
-                </Text>
-                <Text
-                  style={{
-                    fontSize: fontSizes.maxi,
-                    marginRight: width(3),
+                    fontSize: fontSizes.huge,
                     fontWeight: 'bold',
+                    textAlign: 'center',
                     fontFamily: fonts.mates.semiBold,
                   }}
                 >
-                  {cartCount *
-                    numeral(item.salePrices[0].value / 100).format('0.00')}{' '}
-                  ₴
+                  Загальна сума: {totalCartCost} ₴
                 </Text>
-              </View>
 
-              <View
-                style={{
-                  justifyContent: 'space-between',
-                  flexDirection: 'row',
-                  marginHorizontal: width(5),
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    dispatch(removeFromCart(item))
-                    calcTotalCost()
-                    calCartItems()
-                  }}
+                <View
                   style={{
-                    backgroundColor: colors.pink,
-                    borderRadius: width(12),
-                    padding: width(1),
+                    marginTop: height(2),
                   }}
                 >
-                  <AntDesign name="minus" size={24} color={colors.white} />
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  onPress={() => {
-                    dispatch(addToCart(item))
-                    calcTotalCost()
-                    calCartItems()
-                  }}
-                  style={{
-                    backgroundColor: colors.pink,
-                    borderRadius: width(12),
-                    padding: width(1),
-                  }}
-                >
-                  <AntDesign name="plus" size={24} color={colors.white} />
-                </TouchableOpacity>
+                  <Button
+                    containerStyle={{
+                      borderRadius: width(5),
+                    }}
+                    buttonStyle={{
+                      backgroundColor: colors.pink,
+                      paddingVertical: height(1),
+                      paddingHorizontal: width(5),
+                      width: width(50),
+                    }}
+                    titleStyle={{
+                      fontSize: fontSizes.big,
+                      fontFamily: fonts.mates.semiBold,
+                    }}
+                    title="Підтвердити"
+                    onPress={() => {
+                      navigation.navigate('CheckoutScreen', {
+                        totalCost: totalCartCost,
+                      })
+                    }}
+                    disabled={shoppingCart.length <= 0}
+                  />
+                </View>
               </View>
-              <View
-                style={{
-                  borderBottomColor: colors.pink,
-                  borderBottomWidth: 2,
-                  marginTop: height(1),
-                }}
-              />
-            </View>
-          )
-        }}
-        ListFooterComponent={() => {
-          return (
+            )
+          }}
+          contentContainerStyle={{
+            paddingBottom: height(10),
+          }}
+        />
+      )}
+      {shoppingCart.length <= 0 && (
+        <View
+          style={{
+            alignItems: 'center',
+            paddingHorizontal: width(5),
+            justifyContent: 'center',
+          }}
+        >
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              alignContent: 'center',
+              alignSelf: 'center',
+              backgroundColor: colors.wwhite,
+              marginTop: height(5),
+            }}
+          >
             <View
               style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                alignContent: 'center',
-                alignSelf: 'center',
-                backgroundColor: colors.wwhite,
+                marginBottom: height(3),
+              }}
+            >
+              <EmptyCartImage height={height(38)} />
+            </View>
+
+            <Text
+              style={{
+                fontSize: fontSizes.maxi,
+                fontWeight: 'bold',
+                textAlign: 'center',
+                fontFamily: fonts.mates.regular,
+              }}
+            >
+              Ваша корзина пуста, будь ласка додайте продукцію до вашої корзини.
+            </Text>
+
+            <View
+              style={{
                 marginTop: height(2),
               }}
             >
-              <Text
-                style={{
-                  fontSize: fontSizes.huge,
-                  fontWeight: 'bold',
-                  textAlign: 'center',
+              <Button
+                containerStyle={{
+                  borderRadius: width(5),
+                }}
+                buttonStyle={{
+                  backgroundColor: colors.pink,
+                  paddingVertical: height(1),
+                  paddingHorizontal: width(5),
+                  width: width(50),
+                }}
+                titleStyle={{
+                  fontSize: fontSizes.big,
                   fontFamily: fonts.mates.semiBold,
                 }}
-              >
-                Загальна сума: {totalCartCost} ₴
-              </Text>
-
-              <View
-                style={{
-                  marginTop: height(2),
-                }}
-              >
-                <Button
-                  containerStyle={{
-                    borderRadius: width(5),
-                  }}
-                  buttonStyle={{
-                    backgroundColor: colors.pink,
-                    paddingVertical: height(1),
-                    paddingHorizontal: width(5),
-                    width: width(50),
-                  }}
-                  titleStyle={{
-                    fontSize: fontSizes.big,
-                    fontFamily: fonts.mates.semiBold,
-                  }}
-                  title="Підтвердити"
-                  onPress={() => {
-                    navigation.navigate('CheckoutScreen', {
-                      totalCost: totalCartCost,
-                    })
-                  }}
-                  disabled={shoppingCart.length <= 0}
-                />
-              </View>
+                title="Підтвердити"
+                onPress={() => {}}
+                disabled
+              />
             </View>
-          )
-        }}
-        contentContainerStyle={{
-          paddingBottom: height(10),
-        }}
-      />
+          </View>
+        </View>
+      )}
     </View>
   )
 }

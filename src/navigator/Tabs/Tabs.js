@@ -57,6 +57,7 @@ const TabNavigator = () => {
         keyboardHidesTabBar: true,
         tabBarActiveTintColor: colors.black,
         tabBarInactiveTintColor: colors.gray,
+
         tabBarLabelStyle: {
           display: 'none',
         },

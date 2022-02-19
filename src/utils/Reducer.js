@@ -48,7 +48,50 @@ const INTIAL_STATE = {
   getWareHouseFail: false,
   getWareHouseSuccess: false,
 
-  defaultStore: null,
+  defaultStore: {
+    accountId: 'e73729bc-bf9c-11ea-0a80-09bc000101aa',
+    address: 'Торгова',
+    addressFull: {
+      addInfo: 'Торгова',
+      comment: 'Револьт',
+    },
+    archived: false,
+    externalCode: 'g41yZ2gAhsGddp4cJ-eLC2',
+    group: {
+      meta: {
+        href: 'https://online.moysklad.ru/api/remap/1.2/entity/group/e7376f43-bf9c-11ea-0a80-09bc000101ab',
+        mediaType: 'application/json',
+        metadataHref:
+          'https://online.moysklad.ru/api/remap/1.2/entity/group/metadata',
+        type: 'group',
+      },
+    },
+    id: 'b1ab5899-3c8c-11eb-0a80-010d002bfa7e',
+    meta: {
+      href: 'https://online.moysklad.ru/api/remap/1.2/entity/store/b1ab5899-3c8c-11eb-0a80-010d002bfa7e',
+      mediaType: 'application/json',
+      metadataHref:
+        'https://online.moysklad.ru/api/remap/1.2/entity/store/metadata',
+      type: 'store',
+      uuidHref:
+        'https://online.moysklad.ru/app/#warehouse/edit?id=b1ab5899-3c8c-11eb-0a80-010d002bfa7e',
+    },
+    name: 'Street Vapors Торгова 15',
+    owner: {
+      meta: {
+        href: 'https://online.moysklad.ru/api/remap/1.2/entity/employee/e7683ea7-bf9c-11ea-0a80-01bb002b22c7',
+        mediaType: 'application/json',
+        metadataHref:
+          'https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata',
+        type: 'employee',
+        uuidHref:
+          'https://online.moysklad.ru/app/#employee/edit?id=e7683ea7-bf9c-11ea-0a80-01bb002b22c7',
+      },
+    },
+    pathName: '',
+    shared: false,
+    updated: '2022-02-11 15:32:27.187',
+  },
 }
 
 function appReducer(state = INTIAL_STATE, action) {

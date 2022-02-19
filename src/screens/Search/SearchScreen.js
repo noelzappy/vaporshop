@@ -9,6 +9,8 @@ import DropdownAlert from 'react-native-dropdownalert'
 import { Header, Input } from 'react-native-elements'
 import fuzzysort from 'fuzzysort'
 import ProductItem from '../../components/ProductItem'
+import SearchImage from '../../../assets/images/search.svg'
+import { fonts } from '../../theme'
 
 export default function SearchScreen({ navigation }) {
   const { app } = useSelector((state) => state)
@@ -116,6 +118,27 @@ export default function SearchScreen({ navigation }) {
             />
           )
         }}
+        ListEmptyComponent={() => (
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <SearchImage height={height(35)} width="100%" />
+            <Text
+              style={{
+                fontSize: fontSizes.maxi,
+                fontWeight: 'bold',
+                textAlign: 'center',
+                fontFamily: fonts.mates.regular,
+                paddingTop: height(2),
+              }}
+            >
+              Почніть шукати зараз
+            </Text>
+          </View>
+        )}
       />
       <DropdownAlert ref={dropDownAlert} />
     </View>

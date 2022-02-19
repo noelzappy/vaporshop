@@ -336,7 +336,7 @@ export default function Checkout({ navigation, route }) {
           />
 
           <Input
-            placeholder="Eлектронна пошта "
+            placeholder="Номер телефону"
             leftIcon={() => (
               <View
                 style={{
@@ -353,9 +353,11 @@ export default function Checkout({ navigation, route }) {
                 <Text
                   style={{
                     marginLeft: width(2),
+                    fontFamily: fonts.mates.semiBold,
+                    fontSize: fontSizes.maxi,
                   }}
                 >
-                  +380
+                  +38
                 </Text>
               </View>
             )}
